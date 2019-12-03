@@ -1,0 +1,24 @@
+###############################
+spring:
+  redis:
+    database: 0
+    host: 192.168.137.138
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  datasource:
+    url: jdbc:mysql://192.168.137.138:3306/coupon
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
