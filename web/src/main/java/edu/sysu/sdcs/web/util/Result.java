@@ -36,6 +36,9 @@ public class Result implements Serializable {
   public static ResultVO error(String msg) {
     return error(ResultEnum.ERROR.getCode(), msg);
   }
+  public static ResultVO error(ResultEnum msg) {
+    return error(ResultEnum.ERROR.getCode(), msg.getMessage());
+  }
 
   public static ResultVO result(ResponseResult result) {
     if(!result.hasMessages() || null != result.getMessage())

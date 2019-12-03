@@ -1,7 +1,7 @@
 package edu.sysu.sdcs.web.controller;
 
-import edu.sysu.sdcs.web.entity.Coupon;
-import edu.sysu.sdcs.web.service.CouponService;
+import edu.sysu.sdcs.web.entity.Ticket;
+import edu.sysu.sdcs.web.service.TicketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,15 +14,15 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/coupons")
-public class CouponController {
+@RequestMapping(value = "/ticket")
+public class TicketController {
 
   @Autowired
-  CouponService couponService;
+  TicketService ticketService;
 
   @PostMapping()
-  public boolean addCoupon(@Valid @RequestBody Coupon coupon) {
-    var res = couponService.addCoupon(coupon);
+  public boolean addCoupon(@Valid @RequestBody Ticket ticket) {
+    var res = ticketService.addCoupon(ticket);
     return res;
   }
 

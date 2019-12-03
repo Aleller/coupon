@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>edu.sysu.sdcs</groupId>
-	<artifactId>coupon</artifactId>
+	<artifactId>ticket</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>coupon</name>
+	<name>ticket</name>
 	<description>homework of software engineering</description>
 
 	<properties>

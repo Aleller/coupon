@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * @date: Created in 2019/11/26 15:06
  */
 @Service
-public class LoginService {
+public class SignService {
 
     @RequiresPermissions("BUYER")
     public String buyer() {

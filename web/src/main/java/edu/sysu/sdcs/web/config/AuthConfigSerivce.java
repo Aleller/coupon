@@ -3,6 +3,7 @@ package edu.sysu.sdcs.web.config;
 import edu.sysu.sdcs.web.entity.User;
 import edu.sysu.sdcs.web.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -14,6 +15,12 @@ import java.util.Set;
  */
 @Service
 public class AuthConfigSerivce {
+
+  @Value("${role.buyer}")
+  String buyer;
+  @Value("${role.seller}")
+  String seller;
+
 
   @Autowired
   UserRepo userRepo;
@@ -30,14 +37,10 @@ public class AuthConfigSerivce {
 
   public Set<String> getPermissionsByRole(String role) {
     Set<String> permissions = new HashSet<>();
-    switch (role) {
-      case "BUYER":
-        permissions.add("BUYER");
-        break;
-      case "SELLER":
-        permissions.add("SELLER");
-        break;
-    }
+    if(role.equals(buyer))
+      permissions.add(buyer);
+    else if(role.equals(seller))
+      permissions.add(seller);
     return permissions;
   }
 

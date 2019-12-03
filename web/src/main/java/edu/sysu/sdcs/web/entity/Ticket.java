@@ -13,12 +13,16 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author: anan
+ * @date: Created in 2019/12/3 10:21
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = TableName.COUPON)
-public class Coupon implements Serializable {
+@Table(name = TableName.TICKET)
+public class Ticket implements Serializable {
 
   private static final long serialVersionUID = 7444409539093545314L;
   @Id

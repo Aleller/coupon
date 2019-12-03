@@ -1,3 +1,3 @@
-# sekill coupon system
+# sekill ticket system
 
 homework of software engineering

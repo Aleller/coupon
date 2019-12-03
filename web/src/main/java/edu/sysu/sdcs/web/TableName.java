@@ -7,6 +7,7 @@ package edu.sysu.sdcs.web;
 public interface TableName {
 
   String USER = "user";
-  String COUPON = "coupon";
+  String TICKET = "ticket";
+  String TICKET_USER = "ticket_user";
 
 }

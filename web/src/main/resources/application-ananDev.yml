@@ -36,3 +36,7 @@ mq:
       info:
         value: log.info  # 服务名称
         routing-key: log.info.routing.key # info路由键
+
+role:
+  buyer: BUYER
+  seller: SELLER

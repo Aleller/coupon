@@ -9,6 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * @author: anan
+ * @date: Created in 2019/12/3 10:21
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
