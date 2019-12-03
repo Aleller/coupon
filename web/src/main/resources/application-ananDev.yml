@@ -5,17 +5,8 @@ server:
     context-path: /coupon
 
 spring:
-#  redis:
-#    database: 0
-#    host: 10.66.66.17
-#    port: 6379
-#    password:
-#    lettuce:
-#      pool:
-#        max-active: 8
-#        max-wait: -1
-#        max-idle: 8
-#        min-idle: 0
+  application:
+    name: coupon
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -28,8 +19,34 @@ spring:
   aop:
     auto: true # Add @EnableAspectJAutoProxy.
     proxy-target-class: true  # Whether subclass-based (CGLIB) proxies are to be created (true) as
-  application:
-    name: coupon
+  rabbitmq:
+    host: 10.66.66.17 # rabbitMQ server IP
+    port: 5672      # rabbitMQ server port
+    username: admin
+    password: 123456
+#  redis:
+#    database: 0
+#    host: 10.66.66.17
+#    port: 6379
+#    password:
+#    lettuce:
+#      pool:
+#        max-active: 8
+#        max-wait: -1
+#        max-idle: 8
+#        min-idle: 0
+
+
+
+## rabbitMQ properties ,the name as you like
+mq:
+  config:
+    exchange: log.direct  # 交换器的名称
+    queue:
+      info:
+        value: log.info  # 服务名称
+        routing-key: log.info.routing.key # info路由键
+
 
 #eureka:
 #  client:

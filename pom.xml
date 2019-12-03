@@ -18,16 +18,68 @@
 		<java.version>11</java.version>
 	</properties>
 
+  <modules>
+    <module>web</module>
+    <module>consumer</module>
+    <module>provider</module>
+  </modules>
+
 	<dependencies>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version><!--$NO-MVN-MAN-VER$ -->
+        <configuration>
+          <delimiters>
+            <delimiter>${*}</delimiter>
+          </delimiters>
+          <useDefaultDelimiters>false</useDefaultDelimiters>
+        </configuration>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.yml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.yml</exclude>
+          <exclude>**/*.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
+  </build>
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <git_config_profile>dev</git_config_profile>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <id>test</id>
+      <properties>
+        <git_config_profile>test</git_config_profile>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <git_config_profile>prod</git_config_profile>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
