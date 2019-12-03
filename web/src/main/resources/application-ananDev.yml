@@ -1,4 +1,3 @@
-
 server:
   port: 8086
   servlet:
@@ -24,19 +23,10 @@ spring:
     port: 5672      # rabbitMQ server port
     username: admin
     password: 123456
-#  redis:
-#    database: 0
-#    host: 10.66.66.17
-#    port: 6379
-#    password:
-#    lettuce:
-#      pool:
-#        max-active: 8
-#        max-wait: -1
-#        max-idle: 8
-#        min-idle: 0
-
-
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
 
 ## rabbitMQ properties ,the name as you like
 mq:
@@ -46,11 +36,3 @@ mq:
       info:
         value: log.info  # 服务名称
         routing-key: log.info.routing.key # info路由键
-
-
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://eureka:8761/eureka/  # 设置服务注册中心地址，指向另一个注册中心 ，结构是一定的：http://{hostname}:{port}/eureka/
-##      defaultZone: http://cm01:8761/eureka/,http://cm02:8761/eureka/  # 设置服务注册中心地址，指向另一个注册中心 ，结构是一定的：http://{hostname}:{port}/eureka/
-
