@@ -19,12 +19,12 @@ public class TicketController {
 
   @Autowired
   TicketService ticketService;
-
-  @PostMapping()
-  public boolean addCoupon(@Valid @RequestBody Ticket ticket) {
-    var res = ticketService.addCoupon(ticket);
-    return res;
-  }
+//
+//  @PostMapping()
+//  public boolean addCoupon(@Valid @RequestBody Ticket ticket) {
+//    var res = ticketService.save(ticket);
+//    return res;
+//  }
 
   //
 

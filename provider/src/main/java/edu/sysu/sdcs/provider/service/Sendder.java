@@ -1,4 +1,4 @@
-package edu.sysu.sdcs.provider.mq;
+package edu.sysu.sdcs.provider.service;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Component
-public class Sender {
+//@Service
+public class Sendder {
+
   @Value("${mq.config.queue.info.routing-key}")
   private String infoRoutingKey;
 

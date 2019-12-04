@@ -4,6 +4,7 @@ import edu.sysu.sdcs.web.entity.User;
 import edu.sysu.sdcs.web.repository.TicketRepo;
 import edu.sysu.sdcs.web.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -12,20 +12,20 @@
 	<artifactId>ticket</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ticket</name>
+  <packaging>pom</packaging>
 	<description>homework of software engineering</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 
   <modules>
-    <module>web</module>
     <module>consumer</module>
     <module>provider</module>
+    <module>web</module>
   </modules>
 
-	<dependencies>
-	</dependencies>
+	<dependencies></dependencies>
 
   <build>
     <plugins>

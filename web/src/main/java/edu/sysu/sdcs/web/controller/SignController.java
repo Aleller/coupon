@@ -9,6 +9,7 @@ import edu.sysu.sdcs.web.util.Result;
 import edu.sysu.sdcs.web.util.ResultVO;
 import edu.sysu.sdcs.web.util.SubjectUtils;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

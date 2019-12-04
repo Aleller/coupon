@@ -29,7 +29,7 @@ public class Ticket implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @NotNull(message = "coupon name not null")
+  @NotNull(message = "ticket name not null")
   private String name;
 
   @NotNull(message = "amount not null")

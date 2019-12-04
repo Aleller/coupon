@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * @author: anan
  * @date: Created in 2019/12/3 10:21
  */
-@Repository
+//@Repository
 public interface UserRepo extends JpaRepository<User, Integer>{
 //    public List<User> findAllByUsernameEquals(String userName);
 

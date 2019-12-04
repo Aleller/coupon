@@ -11,11 +11,12 @@
   <groupId>edu.sysu.sdcs</groupId>
   <artifactId>web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
   <name>web</name>
   <description>homework of software engineering</description>
 
   <properties>
-    <java.version>11</java.version>
+    <java.version>8</java.version>
   </properties>
 
   <dependencies>
@@ -27,6 +28,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+<!--      <version>2.2.0.RELEASE</version>-->
     </dependency>
 
     <dependency>
@@ -69,11 +71,12 @@
     </dependency>
 
     <!-- provider-->
-    <dependency>
-      <groupId>edu.sysu.sdcs</groupId>
-      <artifactId>provider</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>edu.sysu.sdcs</groupId>-->
+<!--      <artifactId>provider</artifactId>-->
+<!--      <version>0.0.1-SNAPSHOT</version>-->
+<!--    </dependency>-->
+
 
     <!-- redis -->
     <dependency>
@@ -85,6 +88,13 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.21</version>
       <scope>compile</scope>
+    </dependency>
+
+<!--     import rabbitMQ , the name is AMQP in spring project-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+<!--      <version>2.2.0.RELEASE</version>-->
     </dependency>
 
   </dependencies>

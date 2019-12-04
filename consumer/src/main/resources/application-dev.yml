@@ -1,8 +1,9 @@
 spring:
   rabbitmq:
-    host: 192.168.100.189  # rabbitMQ server IP
+    host: 10.66.66.17  # rabbitMQ server IP   127.0.0.1
+#    host: localhost  # rabbitMQ server IP   127.0.0.1
     port: 5672       # rabbitMQ server port
-    username: anan
+    username: admin
     password: 123456
     listener:
       simple:
