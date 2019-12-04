@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Component
-//@Service
-public class Sendder {
+public class Sender {
 
   @Value("${mq.config.queue.info.routing-key}")
   private String infoRoutingKey;
@@ -24,12 +23,12 @@ public class Sendder {
   private AmqpTemplate rabbitAmqpTemplate;
 
   public void send(String msg) {
+
     /**
      * 向消息队列发送消息
      * 参数1：交换器名称
      * 参数2：路由键
      * 参数3：消息
-     *
      */
     this.rabbitAmqpTemplate.convertAndSend(exchange, infoRoutingKey, msg);
   }

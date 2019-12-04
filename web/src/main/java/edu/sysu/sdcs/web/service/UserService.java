@@ -1,6 +1,7 @@
 package edu.sysu.sdcs.web.service;
 
 import edu.sysu.sdcs.web.entity.User;
+import edu.sysu.sdcs.web.enums.RedisEnum;
 import edu.sysu.sdcs.web.repository.TicketRepo;
 import edu.sysu.sdcs.web.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author: anan
@@ -24,9 +27,20 @@ public class UserService {
   @Autowired
   TicketRepo ticketRepo;
 
+  @Autowired
+  RedisService redisService;
+
   public User save(User user){
     //TODO  password ADD  MD5
-    return userRepo.save(user);
+
+    var save = userRepo.save(user);
+
+    // TODO get user table in db to redis
+    List<User> all = userRepo.findAll();
+    all.forEach(x->{
+      redisService.set(x.getAccount(),x, RedisEnum.USER);
+    });
+    return save;
   }
 
   public User findOneById(Integer id){

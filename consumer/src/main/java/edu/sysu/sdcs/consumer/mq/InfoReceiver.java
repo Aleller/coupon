@@ -54,7 +54,7 @@ public class InfoReceiver {
   @RabbitHandler
   public void process(String msg){
     System.out.println("receiver: info -->" + msg);
-    throw new RuntimeException();
+//    throw new RuntimeException();
   }
 
 }

@@ -1,7 +1,9 @@
 package edu.sysu.sdcs.web.config;
 
 import edu.sysu.sdcs.web.entity.User;
+import edu.sysu.sdcs.web.enums.RedisEnum;
 import edu.sysu.sdcs.web.repository.UserRepo;
+import edu.sysu.sdcs.web.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,15 @@ public class AuthConfigSerivce {
   @Value("${role.seller}")
   String seller;
 
-
   @Autowired
-  UserRepo userRepo;
+  RedisService redisService;
 
   public Set<String> getRolesByAccount(String account) {
     Set<String> roles = new HashSet<>();
-    User byAccount = userRepo.findByAccount(account);
+
+    //TODO use redis
+    // User byAccount = userRepo.findByAccount(account);
+    User byAccount = redisService.get(account, User.class, RedisEnum.USER);
     if(byAccount != null){
       // type just one to one
       roles.add(byAccount.getRole());
@@ -45,7 +49,10 @@ public class AuthConfigSerivce {
   }
 
   public String getPasswordByAccount(String account) {
-    User byAccount = userRepo.findByAccount(account);
+    //TODO use redis
+    // User byAccount = userRepo.findByAccount(account);
+    User byAccount = redisService.get(account, User.class, RedisEnum.USER);
+
     if (byAccount != null)
       return byAccount.getPassword();
     return null;

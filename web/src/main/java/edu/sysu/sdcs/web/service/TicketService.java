@@ -1,12 +1,17 @@
 package edu.sysu.sdcs.web.service;
 
 import edu.sysu.sdcs.web.entity.Ticket;
+import edu.sysu.sdcs.web.entity.TicketUser;
 import edu.sysu.sdcs.web.repository.TicketRepo;
 import edu.sysu.sdcs.web.repository.TicketUserRepo;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: anan
@@ -39,6 +44,24 @@ public class TicketService {
 
   public Ticket save(Ticket ticket) {
     return ticketRepo.save(ticket);
+  }
+
+  public List<Ticket> findAll() {
+    return ticketRepo.findAll();
+  }
+
+  public List<Ticket> findAllByUser(Integer userId) {
+    var allByUserId = ticketUserRepo.findAllByUserId(userId);
+    var ticketList = new ArrayList<Ticket>();
+    allByUserId.forEach(x->{
+      ticketList.add(x.getTicket());
+    });
+    return ticketList;
+  }
+
+
+  public void delete(Integer id) {
+    ticketRepo.deleteById(id);
   }
 
 

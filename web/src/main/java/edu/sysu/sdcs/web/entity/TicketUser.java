@@ -27,9 +27,15 @@ public class TicketUser implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+//  @NotNull(message = "ticketId name not null")
+//  @Column(name = "ticket_id")
+//  private Integer ticketId;
+
+  @JoinColumn(name="ticket_id")
   @NotNull(message = "ticketId name not null")
-  @Column(name = "ticket_id")
-  private Integer ticketId;
+  @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.EAGER)
+  private Ticket ticket  ;
+
 
   @NotNull(message = "userId name not null")
   @Column(name = "user_id")

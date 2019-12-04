@@ -40,7 +40,6 @@ public class User implements Serializable {
    *  Seller
    */
   @Column(name = "role")
-  @NotNull(message = "type not null")
   private String role;
 
 }

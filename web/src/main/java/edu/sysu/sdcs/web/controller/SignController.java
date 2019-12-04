@@ -1,8 +1,10 @@
 package edu.sysu.sdcs.web.controller;
 
 import edu.sysu.sdcs.web.entity.User;
+import edu.sysu.sdcs.web.enums.RedisEnum;
 import edu.sysu.sdcs.web.enums.ResultEnum;
 import edu.sysu.sdcs.web.repository.UserRepo;
+import edu.sysu.sdcs.web.service.RedisService;
 import edu.sysu.sdcs.web.service.SignService;
 import edu.sysu.sdcs.web.service.UserService;
 import edu.sysu.sdcs.web.util.Result;
@@ -16,6 +18,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
+@RequestMapping(value = "/")
 public class SignController {
 
   @Value("${role.buyer}")
@@ -40,7 +44,11 @@ public class SignController {
   @Autowired
   private UserService userService;
 
-  @PostMapping("/")
+  @Autowired
+  private RedisService redisService;
+
+//  @PostMapping("")
+  @PostMapping()
   public ResultVO signIn(@Valid @RequestBody User user,
 //                     @PathVariable("cloudId") Integer  cloudId ,
                          BindingResult bindingResult) {
@@ -53,6 +61,7 @@ public class SignController {
     token.setRememberMe(true);
     Subject currentUser = SecurityUtils.getSubject();
     currentUser.login(token);
+    redisService.set(user.getAccount(), user, RedisEnum.USER);
     return Result.success();
   }
 
@@ -63,6 +72,9 @@ public class SignController {
       return Result.error(ResultEnum.PARAM_ERROR);
     }else if(user.getRole() != buyer || user.getRole() != seller){
       log.error("==>[SignController.signup]PARAM_ERROR, user={}, message= User.Role is wrong", user);
+      return Result.error(ResultEnum.PARAM_ERROR);
+    }else if(user.getRole() == null){
+      log.error("==>[SignController.signup]PARAM_ERROR, user={}, message= User.Role is null", user);
       return Result.error(ResultEnum.PARAM_ERROR);
     }
     var save = userService.save(user);
@@ -79,16 +91,13 @@ public class SignController {
 
 
   /************************************************
-   *  has auth
+   *  has auth  test code
    */
-
+/*
   @GetMapping("/buyer")
   @RequiresPermissions("BUYER")
   public String buyer() {
-//    Subject currentUser = SecurityUtils.getSubject();
-//    Object primaryPrincipal = currentUser.getPrincipals().getPrimaryPrincipal();
-//    Object user = currentUser.getSession().getAttribute("user");
-    User profile = SubjectUtils.getProfile();
+    User user = SubjectUtils.getProfile();
     return this.signService.buyer();
   }
 
@@ -96,6 +105,6 @@ public class SignController {
   @GetMapping("/seller")
   public String seller() {
     return this.signService.seller();
-  }
+  }*/
 }
 

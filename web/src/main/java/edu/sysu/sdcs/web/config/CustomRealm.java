@@ -1,7 +1,9 @@
 package edu.sysu.sdcs.web.config;
 
 import edu.sysu.sdcs.web.entity.User;
+import edu.sysu.sdcs.web.enums.RedisEnum;
 import edu.sysu.sdcs.web.repository.UserRepo;
+import edu.sysu.sdcs.web.service.RedisService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -19,62 +21,66 @@ import java.util.Set;
  */
 public class CustomRealm extends AuthorizingRealm {
 
-    @Autowired
-    private AuthConfigSerivce authConfigSerivce;
+  @Autowired
+  private AuthConfigSerivce authConfigSerivce;
 
   @Autowired
-  private UserRepo userRepo;
+  private RedisService redisService;
 
+  /**
+   * 认证
+   */
+  @Override
+  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+    String userName = token.getUsername();
 
-    /**
-     * 认证
-     */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-      UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-      String userName = token.getUsername();
+    //TODO use redis
+    // User user = userRepo.findByAccount(token.getUsername());
+    User user = redisService.get(token.getUsername(), User.class, RedisEnum.USER);
 
-      User user = userRepo.findByAccount(token.getUsername());
-
-      if (user == null) {
-        throw new AuthenticationException("username or password error.");
-      }
-//      if (user.getPassword().equals(MD5Utils.MD5(String.valueOf(token.getPassword()) + user.getSalt()))) {
-      if (user.getPassword().equals(String.valueOf(token.getPassword()))) {
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("user", userRepo.findById(user.getId()));
-        return new SimpleAuthenticationInfo(userName, token.getPassword(), getName());
-      } else {
-        throw new AuthenticationException("username or password error.");
-      }
+    if (user == null) {
+      throw new AuthenticationException("username or password error.");
     }
+//      if (user.getPassword().equals(MD5Utils.MD5(String.valueOf(token.getPassword()) + user.getSalt()))) {
+    if (user.getPassword().equals(String.valueOf(token.getPassword()))) {
+      Session session = SecurityUtils.getSubject().getSession();
+      session.setAttribute("user", user);
+      return new SimpleAuthenticationInfo(userName, token.getPassword(), getName());
+    } else {
+      throw new AuthenticationException("username or password error.");
+    }
+  }
 
-    /**
-     * 授权
-     */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-      String userName = (String) super.getAvailablePrincipal(principalCollection);
-      User byAccount = this.userRepo.findByAccount(userName);
+  /**
+   * 授权
+   */
+  @Override
+  protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    String userName = (String) super.getAvailablePrincipal(principalCollection);
 
-      /*-- anan ------------------------------------------------------------
-      |                         C O N S T A N T S                           |
-      |   put the principals into session,  key=userId value=principals     |
-      |   Session session = SecurityUtils.getSubject().getSession();        |
-      |                                                                     |
-      |   debug: session.delegate.httpSession.session.attrubutes.user       |
-      =======================================================================*/
-      SecurityUtils.getSubject().getSession().setAttribute("user", byAccount);
+    //TODO use redis
+    // User byAccount = this.userRepo.findByAccount(userName);
+    User byAccount = redisService.get(userName, User.class, RedisEnum.USER);
+
+    /*-- anan ------------------------------------------------------------
+    |                         C O N S T A N T S                           |
+    |   put the principals into session,  key=userId value=principals     |
+    |   Session session = SecurityUtils.getSubject().getSession();        |
+    |                                                                     |
+    |   debug: session.delegate.httpSession.session.attrubutes.user       |
+    =======================================================================*/
+    SecurityUtils.getSubject().getSession().setAttribute("user", byAccount);
 
 //      Session session = SecurityUtils.getSubject().getSession();
 
-      SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-      Set<String> roles = authConfigSerivce.getRolesByAccount(userName);
-      authorizationInfo.setRoles(roles);
-      roles.forEach(role -> {
-          Set<String> permissions = this.authConfigSerivce.getPermissionsByRole(role);
-          authorizationInfo.addStringPermissions(permissions);
-      });
-      return authorizationInfo;
-    }
+    SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+    Set<String> roles = authConfigSerivce.getRolesByAccount(userName);
+    authorizationInfo.setRoles(roles);
+    roles.forEach(role -> {
+        Set<String> permissions = this.authConfigSerivce.getPermissionsByRole(role);
+        authorizationInfo.addStringPermissions(permissions);
+    });
+    return authorizationInfo;
+  }
 }

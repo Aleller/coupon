@@ -24,8 +24,6 @@ public enum ResultEnum {
   DELETE_SECTION(15, "部分删除失败"),
   DUPLICATE_ENTRY(16,"已存在，请重试"),
 
-
-
   /**
    * 登陆情况
    */
