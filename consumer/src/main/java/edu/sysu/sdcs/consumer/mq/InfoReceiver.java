@@ -68,26 +68,26 @@ public class InfoReceiver {
    * @param ticketUser
    */
   @RabbitHandler
-  public void process(TicketUser ticketUser){
+  public void process(String  ticketUser){
 // TODO:
 //    1. save ticketUser
 //    1. delete redis 排队 queue
 //    1. add redis ticketUser
 
     System.out.println("receiver: info -->" + ticketUser);
-    Ticket ticket = ticketRepo.findById(ticketUser.getTicket().getId()).get();
-
-    if(ticket.getAmount()<0)
-
-    try{
-
-
-      redisService.deleteQueueByKey(ticketUser);
-      redisService.setTicketUser(ticketUser);
-    }catch (Exception e){
-      log.error("----------- ticketUser --- = {}",ticketUser);
-      log.error("-------------e = {}", e.getMessage());
-    }
+//    Ticket ticket = ticketRepo.findById(ticketUser.getTicket().getId()).get();
+//
+//    if(ticket.getAmount()<0)
+//
+//    try{
+//
+//
+//      redisService.deleteQueueByKey(ticketUser);
+//      redisService.setTicketUser(ticketUser);
+//    }catch (Exception e){
+//      log.error("----------- ticketUser --- = {}",ticketUser);
+//      log.error("-------------e = {}", e.getMessage());
+//    }
 
 
 

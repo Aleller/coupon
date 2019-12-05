@@ -26,6 +26,13 @@ import javax.validation.Valid;
 
 /**
  * @author: anan
+ *
+ * {
+ *   "account":"admin",
+ *   "password":"123456"
+ * }
+ *
+ *
  * @date: Created in 2019/12/3 10:54
  */
 @Slf4j

@@ -23,7 +23,7 @@ public class Sender {
   @Autowired
   private AmqpTemplate rabbitAmqpTemplate;
 
-  public void send(TicketUser ticketUser) {
+  public void send(String ticketUser) {
 
     /**
      * 向消息队列发送消息

@@ -3,6 +3,7 @@ package edu.sysu.sdcs.web.controller;
 //import edu.sysu.sdcs.provider.service.Sendder;
 import edu.sysu.sdcs.web.entity.Ticket;
 import edu.sysu.sdcs.web.entity.TicketUser;
+import edu.sysu.sdcs.web.entity.TicketUserForm;
 import edu.sysu.sdcs.web.entity.User;
 import edu.sysu.sdcs.web.enums.RedisEnum;
 import edu.sysu.sdcs.web.enums.ResultEnum;
@@ -12,6 +13,7 @@ import edu.sysu.sdcs.web.util.Result;
 import edu.sysu.sdcs.web.util.ResultVO;
 import edu.sysu.sdcs.web.util.SubjectUtils;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,23 +35,25 @@ public class SeckillController {
   @Autowired  private RedisService redisService;
 
   @PostMapping()
-  @RequiresPermissions({"BUYER"})
-  public ResultVO inMq(@RequestBody TicketUser ticketUser) {
-    User user = SubjectUtils.getProfile();
+//  @RequiresPermissions({"BUYER"})
+  public ResultVO inMq(@RequestBody TicketUserForm ticketUserForm) {
+//    User user = SubjectUtils.getProfile();
+    User user = redisService.getUserByAccount("admin");
+    var ticketUser = new TicketUser(new Ticket(ticketUserForm.getTicketId()), ticketUserForm.getUserId());
 
 //TODO:
 //  1. redis 校验是不是已经秒杀过了
 //  1. 查找 redis 排队中的队列是否存在
 //  1. add mq
 
-    if (redisService.hasTicketUser(ticketUser.getTicket().getId(), ticketUser.getUserId())) {
+    if (redisService.hasTicketUser(ticketUserForm.getTicketId(), ticketUserForm.getUserId())) {
       return Result.error("用户名：" + user.getAccount() + "，已经秒杀过");
     }
     if(redisService.hasQueueByKey(ticketUser)){
       return Result.error("用户名：" + user.getAccount() + "，排队中");
     }
 
-    this.sender.send(ticketUser);
+    this.sender.send(ticketUser.getUserId()+"");
     return Result.success();
   }
 

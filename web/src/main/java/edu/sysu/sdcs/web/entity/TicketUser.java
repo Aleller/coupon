@@ -46,4 +46,8 @@ public class TicketUser implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createTime;
 
+  public TicketUser(@NotNull(message = "ticketId name not null") Ticket ticket, @NotNull(message = "userId name not null") Integer userId) {
+    this.ticket = ticket;
+    this.userId = userId;
+  }
 }

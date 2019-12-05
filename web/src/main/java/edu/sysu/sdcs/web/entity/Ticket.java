@@ -51,4 +51,8 @@ public class Ticket implements Serializable {
   @UpdateTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   private Date updateTime;
+
+  public Ticket(Integer id) {
+    this.id = id;
+  }
 }
