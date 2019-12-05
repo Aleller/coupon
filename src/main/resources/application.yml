@@ -14,7 +14,7 @@ spring:
         min-idle: 0
 
   datasource:
-    url: jdbc:mysql://localhost:3306/coupon
+    url: jdbc:mysql://localhost:3306/coupon?serverTimezone=UTC
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

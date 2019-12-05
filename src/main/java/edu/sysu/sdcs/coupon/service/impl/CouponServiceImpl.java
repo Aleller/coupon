@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class CouponImpl implements CouponService{
+public class CouponServiceImpl implements CouponService{
     @Autowired
     CouponRepo couponRepo;
 

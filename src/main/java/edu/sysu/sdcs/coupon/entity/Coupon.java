@@ -1,5 +1,6 @@
 package edu.sysu.sdcs.coupon.entity;
 
+import lombok.Cleanup;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -38,4 +40,7 @@ public class Coupon {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
+
+    //@Column(name = "seller_id")
+
 }
