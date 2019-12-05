@@ -22,6 +22,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("code", "400");
         paramMap.put("message", "登录成功!");
+        String name = authentication.getName();
+        String session;
         //设置返回请求头
         response.setContentType("application/json;charset=utf-8");
         //写出流
