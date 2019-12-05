@@ -32,16 +32,20 @@ public class InitRunner implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
+    log.info("==>[InitRunner.run] 初始化...清空 redis 数据，开始...");
+    redisService.deleteAll();
+
+    log.info("==>[InitRunner.run] 初始化...清空 redis 数据，结束");
     log.info("==>[InitRunner.run] 初始化...读取 user 表 写入 redis 开始...");
     var allUser = userRepo.findAll();
     allUser.forEach(x->{
-      redisService.set(x.getAccount(), x, RedisEnum.USER);
+      redisService.setUser(x);
     });
     log.info("==>[InitRunner.run] 初始化...读取 user 表 写入 redis 结束...");
     log.info("==>[InitRunner.run] 初始化...读取 ticket_user 表 写入 redis 开始...");
     var allTicketUser = ticketUserRepo.findAll();
     allTicketUser.forEach(x->{
-      redisService.set(x.getId()+"", x, RedisEnum.TICKET_USER);
+      redisService.setTicketUser(x);
     });
     log.info("==>[InitRunner.run] 初始化...读取 ticket_user 表 写入 redis 结束...");
   }

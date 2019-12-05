@@ -11,6 +11,7 @@
   <groupId>edu.sysu.sdcs</groupId>
   <artifactId>consumer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
   <name>consumer</name>
   <description>homework of software engineering</description>
 
@@ -47,6 +48,33 @@
       <artifactId>spring-boot-starter-amqp</artifactId>
       <version>2.1.1.RELEASE</version>
     </dependency>
+
+    <!-- mysql-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <!--			<version>5.1.21</version>-->
+    </dependency>
+
+    <!-- jpa-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <!-- redis -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.40</version>
+      <scope>compile</scope>
+    </dependency>
+
+
   </dependencies>
 
   <build>

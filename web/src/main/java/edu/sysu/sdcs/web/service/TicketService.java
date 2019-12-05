@@ -50,6 +50,11 @@ public class TicketService {
     return ticketRepo.findAll();
   }
 
+  /**
+   * find ticket_user by user
+   * @param userId
+   * @return
+   */
   public List<Ticket> findAllByUser(Integer userId) {
     var allByUserId = ticketUserRepo.findAllByUserId(userId);
     var ticketList = new ArrayList<Ticket>();

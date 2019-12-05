@@ -61,7 +61,8 @@ public class SignController {
     token.setRememberMe(true);
     Subject currentUser = SecurityUtils.getSubject();
     currentUser.login(token);
-    redisService.set(user.getAccount(), user, RedisEnum.USER);
+//    User oneByAccount = userService.findOneByAccount(user.getAccount());
+//    redisService.set(user.getAccount(), oneByAccount, RedisEnum.USER);
     return Result.success();
   }
 

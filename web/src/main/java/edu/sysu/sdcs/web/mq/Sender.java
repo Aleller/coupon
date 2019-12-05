@@ -1,5 +1,6 @@
 package edu.sysu.sdcs.web.mq;
 
+import edu.sysu.sdcs.web.entity.TicketUser;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +23,7 @@ public class Sender {
   @Autowired
   private AmqpTemplate rabbitAmqpTemplate;
 
-  public void send(String msg) {
+  public void send(TicketUser ticketUser) {
 
     /**
      * 向消息队列发送消息
@@ -30,7 +31,7 @@ public class Sender {
      * 参数2：路由键
      * 参数3：消息
      */
-    this.rabbitAmqpTemplate.convertAndSend(exchange, infoRoutingKey, msg);
+    this.rabbitAmqpTemplate.convertAndSend(exchange, infoRoutingKey, ticketUser);
   }
 
 }

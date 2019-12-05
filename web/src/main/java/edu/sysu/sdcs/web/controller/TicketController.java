@@ -8,14 +8,12 @@ import edu.sysu.sdcs.web.util.Result;
 import edu.sysu.sdcs.web.util.ResultVO;
 import edu.sysu.sdcs.web.util.SubjectUtils;
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author  anan
@@ -29,6 +27,7 @@ public class TicketController {
   TicketService ticketService;
 
   @PostMapping()
+  @RequiresPermissions({"SELLER"})
   public ResultVO save(@Valid @RequestBody Ticket ticket,
                        BindingResult bindingResult) {
     if (bindingResult.hasErrors() ){
@@ -38,20 +37,25 @@ public class TicketController {
     return Result.success(ticketService.save(ticket));
   }
 
+
+  /**
+   * find ticket_user by user BUYER
+   * @return
+   */
   @GetMapping()
-  @RequiresPermissions({"BUYER","SELLER"})
+  @RequiresPermissions({"BUYER"})
   public ResultVO findAllByUser() {
     User user = SubjectUtils.getProfile();
     return Result.success(ticketService.findAllByUser(user.getId()));
   }
 
-
-  @DeleteMapping("/{id}")
-  public ResultVO delete(@PathVariable("id") Integer  id) {
-    ticketService.delete(id);
-    return Result.success();
-  }
-
+//
+//  @DeleteMapping("/{id}")
+//  public ResultVO delete(@PathVariable("id") Integer  id) {
+//    ticketService.delete(id);
+//    return Result.success();
+//  }
+//
 
 
 }

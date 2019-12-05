@@ -1,8 +1,16 @@
 package edu.sysu.sdcs.consumer.mq;
 
+import edu.sysu.sdcs.consumer.mq.entity.Ticket;
+import edu.sysu.sdcs.consumer.mq.entity.TicketUser;
+import edu.sysu.sdcs.consumer.mq.repository.TicketUserRepo;
+import edu.sysu.sdcs.consumer.mq.repository.TicketRepo;
+import edu.sysu.sdcs.consumer.mq.service.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 /**
  * 消息接收者 1
@@ -37,6 +45,7 @@ import org.springframework.stereotype.Component;
  * @author anan
  * @created by anan on 2019/3/1 17:20
  */
+@Slf4j
 @Component
 @RabbitListener(
         bindings = @QueueBinding(
@@ -47,13 +56,41 @@ import org.springframework.stereotype.Component;
 )
 public class InfoReceiver {
 
+  @Autowired
+  TicketUserRepo ticketUserRepo;
+  @Autowired
+  TicketRepo ticketRepo;
+  @Autowired
+  RedisService redisService;
+
   /**
    * 接收消息方法，采用消息队列监听机制
-   * @param msg
+   * @param ticketUser
    */
   @RabbitHandler
-  public void process(String msg){
-    System.out.println("receiver: info -->" + msg);
+  public void process(TicketUser ticketUser){
+// TODO:
+//    1. save ticketUser
+//    1. delete redis 排队 queue
+//    1. add redis ticketUser
+
+    System.out.println("receiver: info -->" + ticketUser);
+    Ticket ticket = ticketRepo.findById(ticketUser.getTicket().getId()).get();
+
+    if(ticket.getAmount()<0)
+
+    try{
+
+
+      redisService.deleteQueueByKey(ticketUser);
+      redisService.setTicketUser(ticketUser);
+    }catch (Exception e){
+      log.error("----------- ticketUser --- = {}",ticketUser);
+      log.error("-------------e = {}", e.getMessage());
+    }
+
+
+
 //    throw new RuntimeException();
   }
 

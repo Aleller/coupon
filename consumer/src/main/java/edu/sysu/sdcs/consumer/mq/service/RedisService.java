@@ -1,9 +1,9 @@
-package edu.sysu.sdcs.web.service;
+package edu.sysu.sdcs.consumer.mq.service;
 
 import com.alibaba.fastjson.JSON;
-import edu.sysu.sdcs.web.entity.TicketUser;
-import edu.sysu.sdcs.web.entity.User;
-import edu.sysu.sdcs.web.enums.RedisEnum;
+import edu.sysu.sdcs.consumer.mq.entity.TicketUser;
+import edu.sysu.sdcs.consumer.mq.entity.User;
+import edu.sysu.sdcs.consumer.mq.enums.RedisEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

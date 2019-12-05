@@ -29,18 +29,32 @@ public class UserController {
   UserService userService;
 
   @GetMapping()
-  @RequiresPermissions({"BUYER","SELLER"})
-  public ResultVO findYourself(){
+  public ResultVO findAll(){
+    return Result.success(userService.findAll());
+  }
+
+
+  @GetMapping("/buyer")
+  @RequiresPermissions({"BUYER"})
+  public ResultVO findOneByBuyer(){
+    User user = SubjectUtils.getProfile();
+    return Result.success(user);
+  }
+
+  @GetMapping("/seller")
+  @RequiresPermissions({"SELLER"})
+  public ResultVO findOneBySeller(){
     User user = SubjectUtils.getProfile();
     return Result.success(user);
   }
 
   @GetMapping("/{id}")
-  @RequiresPermissions({"BUYER","SELLER"})
+//  @RequiresPermissions({"BUYER","SELLER"})
   public ResultVO findOneById(@PathVariable("id") Integer  id){
     User user = SubjectUtils.getProfile();
     return Result.success(userService.findOneById(id));
   }
+
 
 
 }

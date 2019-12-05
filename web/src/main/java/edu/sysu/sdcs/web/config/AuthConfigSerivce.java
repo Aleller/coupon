@@ -29,9 +29,10 @@ public class AuthConfigSerivce {
   public Set<String> getRolesByAccount(String account) {
     Set<String> roles = new HashSet<>();
 
-    //TODO use redis
+    // use redis
     // User byAccount = userRepo.findByAccount(account);
-    User byAccount = redisService.get(account, User.class, RedisEnum.USER);
+    User byAccount = redisService.getUserByAccount(account);
+
     if(byAccount != null){
       // type just one to one
       roles.add(byAccount.getRole());
@@ -49,9 +50,10 @@ public class AuthConfigSerivce {
   }
 
   public String getPasswordByAccount(String account) {
-    //TODO use redis
+    // use redis
     // User byAccount = userRepo.findByAccount(account);
-    User byAccount = redisService.get(account, User.class, RedisEnum.USER);
+    User byAccount = redisService.getUserByAccount(account);
+
 
     if (byAccount != null)
       return byAccount.getPassword();

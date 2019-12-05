@@ -35,9 +35,9 @@ public class CustomRealm extends AuthorizingRealm {
     UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
     String userName = token.getUsername();
 
-    //TODO use redis
+    // use redis
     // User user = userRepo.findByAccount(token.getUsername());
-    User user = redisService.get(token.getUsername(), User.class, RedisEnum.USER);
+    User user = redisService.getUserByAccount(token.getUsername());
 
     if (user == null) {
       throw new AuthenticationException("username or password error.");
@@ -59,9 +59,9 @@ public class CustomRealm extends AuthorizingRealm {
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
     String userName = (String) super.getAvailablePrincipal(principalCollection);
 
-    //TODO use redis
+    // use redis
     // User byAccount = this.userRepo.findByAccount(userName);
-    User byAccount = redisService.get(userName, User.class, RedisEnum.USER);
+    User byAccount = redisService.getUserByAccount(userName);
 
     /*-- anan ------------------------------------------------------------
     |                         C O N S T A N T S                           |

@@ -21,26 +21,25 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-  @Autowired
-  UserRepo userRepo;
-
-  @Autowired
-  TicketRepo ticketRepo;
-
-  @Autowired
-  RedisService redisService;
+  @Autowired  UserRepo userRepo;
+  @Autowired  TicketRepo ticketRepo;
+  @Autowired  RedisService redisService;
 
   public User save(User user){
     //TODO  password ADD  MD5
 
     var save = userRepo.save(user);
 
-    // TODO get user table in db to redis
+    // get user table in db to redis
     List<User> all = userRepo.findAll();
     all.forEach(x->{
-      redisService.set(x.getAccount(),x, RedisEnum.USER);
+      redisService.setUser(x);
     });
     return save;
+  }
+
+  public List<User> findAll(){
+    return userRepo.findAll();
   }
 
   public User findOneById(Integer id){
@@ -48,6 +47,12 @@ public class UserService {
     user.setPassword(null);
     return user;
   }
+
+  public User findOneByAccount(String account){
+    var user = userRepo.findByAccount(account);
+    return user;
+  }
+
 
   public User findOrderById(Integer id){
     var user = userRepo.findOneById(id);

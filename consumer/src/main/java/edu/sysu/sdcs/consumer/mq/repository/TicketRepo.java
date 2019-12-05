@@ -1,6 +1,6 @@
-package edu.sysu.sdcs.web.repository;
+package edu.sysu.sdcs.consumer.mq.repository;
 
-import edu.sysu.sdcs.web.entity.Ticket;
+import edu.sysu.sdcs.consumer.mq.entity.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

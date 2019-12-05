@@ -10,6 +10,23 @@ spring:
         retry:
           enabled: true
           max-attempts: 5
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/coupon?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT
+  jpa:
+    show-sql: true
+  jackson:
+    default-property-inclusion: always
+  aop:
+    auto: true # Add @EnableAspectJAutoProxy.
+    proxy-target-class: true  # Whether subclass-based (CGLIB) proxies are to be created (true) as
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+
 
 server:
   port: 8091
