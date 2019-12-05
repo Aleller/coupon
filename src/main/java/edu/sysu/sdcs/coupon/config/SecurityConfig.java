@@ -14,24 +14,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.Resource;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     //自定义认证
-    @Resource
+    @Autowired
     private LoginValidateAuthenticationProvider loginValidateAuthenticationProvider;
 
     //登录成功handler
-    @Resource
+    @Autowired
     private LoginSuccessHandler loginSuccessHandler;
 
     //登录失败handler
-    @Resource
+    @Autowired
     private LoginFailureHandler loginFailureHandler;
 
-    @Resource
+    @Autowired
     private UserService userService;
 
     @Override

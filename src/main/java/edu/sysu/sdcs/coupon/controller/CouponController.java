@@ -5,7 +5,6 @@ import edu.sysu.sdcs.coupon.service.CouponService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 @Api(value = "优惠券Controller")
 @RestController
 @RequestMapping("/coupons")
-@Slf4j
 public class CouponController {
     @Autowired
     CouponService couponService;
