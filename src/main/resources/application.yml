@@ -24,3 +24,9 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: 123456
