@@ -7,9 +7,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("/api/auth")
     public String login(String username, String password, HttpServletResponse response) throws IOException {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         //token.setRememberMe(true);
@@ -36,7 +34,7 @@ public class UserController {
         //设置返回请求头
         String sessionId = (String) SecurityUtils.getSubject().getSession().getId();
         response.setContentType("application/json;charset=utf-8");
-        response.setHeader("Authorization",sessionId);
+        response.setHeader("Authorization", sessionId);
         //写出流
         return JSONObject.toJSONString(paramMap);
     }
@@ -50,14 +48,26 @@ public class UserController {
     @GetMapping("/read")
     public String read(HttpServletRequest request) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-//        String user = (String) SecurityUtils.getSubject().getPrincipal();
         return user.getUsername() + " is " + userService.read();
     }
 
-    @GetMapping("/write")
-    public String write() {
-        return this.userService.write();
+    @PostMapping("/api/users")
+    public String register(String username, String password, String kind) {
+        return "UserController.register()";
     }
 
+    @PostMapping("/api/users/{username}/coupons")
+    public String addCoupon(@PathVariable String username, String name, String amount, String description, String stock) {
+        return "UserController.addCoupon";
+    }
 
+    @GetMapping("/api/users/{username}/coupons")
+    public String getCouponInfo(@PathVariable String username, int page) {
+        return "UserController.getCouponInfo";
+    }
+
+    @PatchMapping("/api/users/{username}/coupons/{name}")
+    public String seckill(@PathVariable String username, @PathVariable String name) {
+        return "UserController.seckill()";
+    }
 }
