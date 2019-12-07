@@ -1,9 +1,11 @@
 package edu.sysu.sdcs.coupon.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 
-public interface UserService extends UserDetailsService {
-    UserDetails loadUserByUsername(String s) throws UsernameNotFoundException;
+public interface UserService {
+    @RequiresPermissions("read")
+    String read();
+
+    @RequiresPermissions("write")
+    String write();
 }

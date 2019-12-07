@@ -41,6 +41,7 @@ public class Coupon {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    //@Column(name = "seller_id")
+    @Column(name = "seller_id")
+    private Integer sellerId;
 
 }
