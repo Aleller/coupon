@@ -25,14 +25,13 @@ public class CouponController {
     @ApiImplicitParam(name = "coupon", value = "优惠券实体", required = true, dataType = "Coupon")
     @PostMapping()
     public boolean addCoupon(@Valid @RequestBody Coupon coupon) {
-        var res = couponService.addCoupon(coupon);
-
-        return res;
+//        couponService.addCoupon(coupon);
+        return true;
     }
 
     @PatchMapping("/{couponName}")
     public boolean seckillCoupon(@PathVariable(value = "couponName") Integer couponId) {
-        seckillService.seckillCoupon(123, couponId);
+//        seckillService.seckillCoupon(123, couponId);
         return true;
     }
 }

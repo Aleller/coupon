@@ -16,8 +16,9 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "用户名不能为空")
-    private String name;
+    @NotNull(message = "优惠券不能为空")
+    @Column(name = "coupon_name")
+    private String couponName;
 
     @NotNull(message = "优惠券数目不能为空")
     @Min(value=0, message = "优惠券数目必须大于0")
@@ -29,6 +30,11 @@ public class Coupon {
     @Min(value=0, message = "优惠券面额必须大于0")
     private Integer stock;
 
+    @JoinColumn(name="seller_id")
+    @NotNull(message = "商家id不能为空")
+    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.EAGER)
+    private User seller;
+
     @Column(name = "create_time")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -38,8 +44,4 @@ public class Coupon {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
-
-    @Column(name = "seller_id")
-    private Integer sellerId;
-
 }
