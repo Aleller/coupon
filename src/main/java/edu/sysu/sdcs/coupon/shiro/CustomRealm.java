@@ -2,8 +2,8 @@ package edu.sysu.sdcs.coupon.shiro;
 
 
 import edu.sysu.sdcs.coupon.entity.User;
-import edu.sysu.sdcs.coupon.repository.RoleRepository;
-import edu.sysu.sdcs.coupon.repository.UserRepository;
+import edu.sysu.sdcs.coupon.repository.RoleRepo;
+import edu.sysu.sdcs.coupon.repository.UserRepo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -16,10 +16,10 @@ import java.util.Set;
 
 public class CustomRealm extends AuthorizingRealm {
     @Autowired
-    private UserRepository userRepository;
+    private UserRepo userRepo;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleRepo roleRepo;
 
     /**
      * 认证
@@ -30,7 +30,7 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
-        User user = this.userRepository.findUserByUsernameEquals(username);
+        User user = this.userRepo.findUserByUsernameEquals(username);
         String password = user.getPassword();
         return new SimpleAuthenticationInfo(user, password, getName());
     }
