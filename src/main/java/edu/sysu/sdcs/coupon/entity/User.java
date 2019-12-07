@@ -1,5 +1,6 @@
 package edu.sysu.sdcs.coupon.entity;
 
+import edu.sysu.sdcs.coupon.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,5 +17,5 @@ public class User {
 
     private String password;
 
-    private String role;
+    private Role role;
 }

@@ -67,7 +67,8 @@ public class UserController {
     }
 
     @PatchMapping("/api/users/{username}/coupons/{name}")
-    public String seckill(@PathVariable String username, @PathVariable String name) {
+    public String seckill(@PathVariable String username, @PathVariable String name, HttpServletResponse response) {
+        response.setStatus(204);
         return "UserController.seckill()";
     }
 }

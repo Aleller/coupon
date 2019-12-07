@@ -2,7 +2,7 @@ package edu.sysu.sdcs.coupon.shiro;
 
 
 import edu.sysu.sdcs.coupon.entity.User;
-import edu.sysu.sdcs.coupon.repository.RoleRepo;
+import edu.sysu.sdcs.coupon.enums.Role;
 import edu.sysu.sdcs.coupon.repository.UserRepo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,8 +18,6 @@ public class CustomRealm extends AuthorizingRealm {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private RoleRepo roleRepo;
 
     /**
      * 认证
@@ -43,13 +41,15 @@ public class CustomRealm extends AuthorizingRealm {
         User user = (User) super.getAvailablePrincipal(principalCollection);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         Set<String> roles = new HashSet<>();
-        roles.add(user.getRole());
+        roles.add(user.getRole().toString());
 
         authorizationInfo.setRoles(roles);
+
         Set<String> permissions = new HashSet<>();
         permissions.add("read");
         permissions.add("write");
         authorizationInfo.addStringPermissions(permissions);
+
         return authorizationInfo;
     }
 }
