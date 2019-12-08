@@ -39,29 +39,27 @@ public class SeckillServiceImpl implements SeckillService{
     @Autowired
     private MQSender mqSender;
 
-    private void decStock (Coupon coupon) {
-        Boolean res = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
-
-        if (!res) {
-            throw new MsgException("优惠券" + coupon.getCouponName() + "卖完了");
-        }
-    }
-
     private void enqueue(User user, Coupon coupon) {
         var orderVO = new OrderVO();
         orderVO.setUserId(user.getId());
         orderVO.setCouponId(coupon.getId());
 
         var msg = JSONObject.toJSONString(orderVO);
-        var res = redisTemplate.opsForValue().setIfAbsent(msg, 1);
+        var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
 
-        if (!res) {
+        if (!absRes) {
             throw new MsgException("您已经抢到了这个优惠券");
         }
 
         // mysql查询
 
-        decStock(coupon);
+        Boolean curRes = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
+
+        if (!curRes) {
+            // 先去锁
+            redisTemplate.delete(msg);
+            throw new MsgException("优惠券" + coupon.getCouponName() + "卖完了");
+        }
 
         mqSender.send(msg);
     }
