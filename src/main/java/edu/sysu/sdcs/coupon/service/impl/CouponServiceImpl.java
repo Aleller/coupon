@@ -17,8 +17,6 @@ public class CouponServiceImpl implements CouponService{
     @Autowired
     CouponRepo couponRepo;
 
-
-
     @Autowired
     RedisTemplate redisTemplate;
 

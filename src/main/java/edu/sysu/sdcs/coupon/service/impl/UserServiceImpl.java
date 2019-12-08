@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Coupon> sellserCouponsLeft(User seller) {
-        //todo...这个api是什么意思，查询该商家的所有优惠券的库存之和吗？
         return couponRepo.findCouponsBySellerEquals(seller);
     }
 }
