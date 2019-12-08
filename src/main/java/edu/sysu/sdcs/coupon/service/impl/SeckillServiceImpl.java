@@ -1,10 +1,13 @@
 package edu.sysu.sdcs.coupon.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.sysu.sdcs.coupon.entity.Coupon;
+import edu.sysu.sdcs.coupon.entity.Order;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.ordermq.MQSender;
 import edu.sysu.sdcs.coupon.service.CouponService;
+import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.service.SeckillService;
 import edu.sysu.sdcs.coupon.service.UserService;
 import edu.sysu.sdcs.coupon.view.OrderVO;
@@ -27,30 +30,46 @@ public class SeckillServiceImpl implements SeckillService{
     private CouponService couponService;
 
     @Autowired
-    DefaultRedisScript<Boolean> defaultRedisScript;
+    private DefaultRedisScript<Boolean> defaultRedisScript;
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private MQSender mqSender;
 
-    private void enqueue(Integer userId, Integer couponId) {
-        var res = redisTemplate.opsForValue().get(userId);
+    @Autowired
+    private OrderService orderService;
 
-        if (null != res) {
-            throw new MsgException("您在队列中, 不允许重复排队抢券");
+    private void enqueue(User user, Coupon coupon) {
+        var orderVO = new OrderVO();
+        orderVO.setUserId(user.getId());
+        orderVO.setCouponId(coupon.getId());
+
+        var msg = JSONObject.toJSONString(orderVO);
+        var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
+
+        if (!absRes) {
+            throw new MsgException("您已经抢到了这个优惠券");
         }
 
-        redisTemplate.opsForValue().set(userId, couponId);
+        Order order = orderService.findByUserEqualsAndCouponEquals(user.getId(), coupon.getId());
+        if(order != null){
+            throw new MsgException("您已经抢到了这个优惠券");
+        }
 
-        var orderVO = new OrderVO();
-        orderVO.setUserId(userId);
-        orderVO.setCouponId(couponId);
-        mqSender.send(JSONObject.toJSONString(orderVO));
+        Boolean curRes = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
+
+        if (!curRes) {
+            // 先去锁
+            redisTemplate.delete(msg);
+            throw new MsgException("优惠券" + coupon.getCouponName() + "卖完了");
+        }
+
+        mqSender.send(msg);
     }
 
     @Override
@@ -70,13 +89,7 @@ public class SeckillServiceImpl implements SeckillService{
             throw new MsgException("商家" + sellerName + "没有优惠券" + couponName);
         }
 
-        Boolean res = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
-
-        if (!res) {
-            throw new MsgException("优惠券" + couponName + "卖完了");
-        }
-
-        enqueue(user.getId(), coupon.getId());
+        enqueue(user, coupon);
 
         log.info("==> [seckill] 用户{}秒杀商家{}优惠券{}",
                 user.getUsername(),

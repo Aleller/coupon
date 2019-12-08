@@ -2,6 +2,7 @@ package edu.sysu.sdcs.coupon.service.impl;
 
 import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.User;
+import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.repository.CouponRepo;
 import edu.sysu.sdcs.coupon.repository.UserRepo;
 import edu.sysu.sdcs.coupon.service.CouponService;
@@ -22,6 +23,9 @@ public class CouponServiceImpl implements CouponService{
     RedisTemplate redisTemplate;
 
     public void updateRedis (Coupon coupon) {
+        if (coupon.getAmount() < 0) {
+            throw new MsgException("优惠券"+ coupon.getCouponName() +"数量小于0");
+        }
         redisTemplate.opsForValue().set(coupon.getId(), coupon.getAmount());
     }
 

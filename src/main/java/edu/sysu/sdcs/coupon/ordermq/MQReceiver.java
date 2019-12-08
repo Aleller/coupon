@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @RabbitListener(
@@ -22,6 +23,9 @@ public class MQReceiver {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @RabbitHandler
     public void ordermqReceiver(String jsonMsg) {
         var order = JSONObject.parseObject(jsonMsg, OrderVO.class);
@@ -29,5 +33,7 @@ public class MQReceiver {
         log.info("==> [receiver] user: {} seckill coupon: {}", order.getUserId(), order.getCouponId());
 
         orderService.createOrder(order.getCouponId(), order.getUserId());
+
+        redisTemplate.delete(jsonMsg);
     }
 }

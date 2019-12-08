@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface OrderRepo extends JpaRepository<Order, Integer> {
     Page<Order> findOrdersByUserEquals(User user, Pageable pageable);
+    Order findByUserEqualsAndCouponEquals(Integer userId, Integer couponId);
 }
