@@ -1,5 +1,7 @@
 package edu.sysu.sdcs.coupon.service;
 
+import edu.sysu.sdcs.coupon.entity.User;
+
 public interface SeckillService {
-    void seckillCoupon(Integer userId, Integer couponId);
+    void seckillCoupon(String couponName, String sellerName, User user);
 }

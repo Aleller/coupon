@@ -28,6 +28,6 @@ public class MQReceiver {
 
         log.info("==> [receiver] user: {} seckill coupon: {}", order.getUserId(), order.getCouponId());
 
-        orderService.createOrder(order.getCouponId());
+        orderService.createOrder(order.getCouponId(), order.getUserId());
     }
 }

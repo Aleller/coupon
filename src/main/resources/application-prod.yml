@@ -1,4 +1,8 @@
 spring:
+  aop:
+    auto: true # Add @EnableAspectJAutoProxy.
+    proxy-target-class: true  # Whether subclass-based (CGLIB) proxies are to be created (true) as
+
   redis:
     database: 0
     host: redis
@@ -18,6 +22,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
+    show-sql: true
     properties:
       hibernate:
         hbm2ddl:
