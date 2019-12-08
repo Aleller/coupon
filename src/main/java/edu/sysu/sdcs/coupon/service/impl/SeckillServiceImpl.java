@@ -1,6 +1,7 @@
 package edu.sysu.sdcs.coupon.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.ordermq.MQSender;
@@ -38,19 +39,31 @@ public class SeckillServiceImpl implements SeckillService{
     @Autowired
     private MQSender mqSender;
 
-    private void enqueue(Integer userId, Integer couponId) {
-        var res = redisTemplate.opsForValue().get(userId);
+    private void decStock (Coupon coupon) {
+        Boolean res = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
 
-        if (null != res) {
-            throw new MsgException("您在队列中, 不允许重复排队抢券");
+        if (!res) {
+            throw new MsgException("优惠券" + coupon.getCouponName() + "卖完了");
+        }
+    }
+
+    private void enqueue(User user, Coupon coupon) {
+        var orderVO = new OrderVO();
+        orderVO.setUserId(user.getId());
+        orderVO.setCouponId(coupon.getId());
+
+        var msg = JSONObject.toJSONString(orderVO);
+        var res = redisTemplate.opsForValue().setIfAbsent(msg, 1);
+
+        if (!res) {
+            throw new MsgException("您已经抢到了这个优惠券");
         }
 
-        redisTemplate.opsForValue().set(userId, couponId);
+        // mysql查询
 
-        var orderVO = new OrderVO();
-        orderVO.setUserId(userId);
-        orderVO.setCouponId(couponId);
-        mqSender.send(JSONObject.toJSONString(orderVO));
+        decStock(coupon);
+
+        mqSender.send(msg);
     }
 
     @Override
@@ -70,13 +83,7 @@ public class SeckillServiceImpl implements SeckillService{
             throw new MsgException("商家" + sellerName + "没有优惠券" + couponName);
         }
 
-        Boolean res = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
-
-        if (!res) {
-            throw new MsgException("优惠券" + couponName + "卖完了");
-        }
-
-        enqueue(user.getId(), coupon.getId());
+        enqueue(user, coupon);
 
         log.info("==> [seckill] 用户{}秒杀商家{}优惠券{}",
                 user.getUsername(),
