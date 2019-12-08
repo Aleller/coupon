@@ -1,6 +1,7 @@
 package edu.sysu.sdcs.coupon.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

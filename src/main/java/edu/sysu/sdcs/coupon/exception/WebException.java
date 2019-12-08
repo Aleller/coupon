@@ -86,7 +86,7 @@ public class WebException {//extends OpStackException {
      */
     @ExceptionHandler(MsgException.class)
     @ResponseBody
-    public ResultVO getSessionTimeoutException(MsgException e) {
+    public ResultVO getMsgException(MsgException e) {
         log.error(e.getMsg());
         return ResponseResult.error(e.getMsg());
     }
