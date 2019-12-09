@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 @Data
@@ -21,6 +21,6 @@ public class User {
     @NotBlank(message = "密码不能为空")
     private String password;
 
-    @NotEmpty(message = "用户类型不能为空")
+    @NotNull(message = "用户类型不能为空")
     private Role role;
 }

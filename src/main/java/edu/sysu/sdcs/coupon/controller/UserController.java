@@ -6,6 +6,7 @@ import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.Order;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.enums.Role;
+import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.service.SeckillService;
@@ -76,10 +77,17 @@ public class UserController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+
+        if (null == kind) {
+            kind = "customer";
+        }
+
         if(kind.equals("customer")){
             user.setRole(Role.CUSTOMER);
-        }else{
+        }else if (kind.equals("seller")){
             user.setRole(Role.SELLER);
+        } else {
+            throw new MsgException("kind参数非法");
         }
 
         userService.register(user);
