@@ -32,8 +32,12 @@ public class MQReceiver {
 
         log.info("==> [receiver] user: {} seckill coupon: {}", order.getUserId(), order.getCouponId());
 
-        orderService.createOrder(order.getCouponId(), order.getUserId());
+        try {
+            orderService.createOrder(order.getCouponId(), order.getUserId());
+            redisTemplate.delete(jsonMsg);
+        }catch (Exception e){
+            log.error(e.toString());
+        }
 
-        redisTemplate.delete(jsonMsg);
     }
 }

@@ -7,6 +7,7 @@ import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.repository.CouponRepo;
 import edu.sysu.sdcs.coupon.repository.OrderRepo;
 import edu.sysu.sdcs.coupon.repository.UserRepo;
+import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.view.OrderVO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepo orderRepo;
 
-    public void createOrder(Integer conponId, Integer userId) {
+    @Autowired
+    CouponService couponService;
+
+    public void createOrder(Integer couponId, Integer userId) {
         var user = userRepo.findById(userId);
-        var coupon = couponRepo.findById(conponId);
+        var coupon = couponRepo.findById(couponId);
 
         if (!user.isPresent()) {
             throw new MsgException("用户不存在");
@@ -46,6 +50,8 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user.get());
         order.setCoupon(coupon.get());
         orderRepo.save(order);
+        couponService.decCouponAmount(couponId);
+
 
         log.info("==>[order] 用户: {} 获得优惠券 {}",
                 user.get().getUsername(),

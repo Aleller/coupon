@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
 public class CouponServiceImpl implements CouponService{
@@ -42,6 +44,13 @@ public class CouponServiceImpl implements CouponService{
         return couponRepo.findCouponByCouponNameEquals(couponName);
     }
 
+    @Override
+    @Transactional
+    public void decCouponAmount(Integer couponId) {
+        Coupon coupon = couponRepo.findById(couponId).get();
+        coupon.setAmount(coupon.getAmount() - 1);
+        couponRepo.save(coupon);
+    }
 
 
 }
