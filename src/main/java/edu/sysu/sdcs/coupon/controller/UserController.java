@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -39,7 +40,7 @@ public class UserController {
     private SeckillService seckillService;
 
     @ApiOperation("登录")
-    @PostMapping("/user/login")
+    @PostMapping("/auth")
     public String login(String username, String password, HttpServletResponse response) throws IOException {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         //token.setRememberMe(true);
@@ -48,31 +49,36 @@ public class UserController {
 
         //登录成功返回
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("kind", "saler or customer");
+        if(SecurityUtils.getSubject().hasRole("SELLER")){
+            paramMap.put("kind", "saler");
+        }else{
+            paramMap.put("kind", "customer");
+        }
         paramMap.put("errMsg", "登录成功!");
         //设置返回请求头
         String sessionId = (String) SecurityUtils.getSubject().getSession().getId();
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Authorization", sessionId);
+        response.setStatus(200);
         //写出流
         return JSONObject.toJSONString(paramMap);
     }
 
     @ApiOperation("登出")
-    @GetMapping("/user/logout")
+    @GetMapping("/logout")
     public void logout() {
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.logout();
     }
 
-    @GetMapping("/user/read")
+    @GetMapping("/read")
     public String read(HttpServletRequest request) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         return user.getUsername() + " is " + userService.read();
     }
 
     @ApiOperation("注册")
-    @PostMapping("/user/register")
+    @PostMapping("/users")
     public String register(String username, String password, String kind, HttpServletResponse response) {
         User user = new User();
         user.setUsername(username);
@@ -84,7 +90,7 @@ public class UserController {
 
         if(kind.equals("customer")){
             user.setRole(Role.CUSTOMER);
-        }else if (kind.equals("seller")){
+        }else if (kind.equals("saler")){
             user.setRole(Role.SELLER);
         } else {
             throw new MsgException("kind参数非法");
@@ -93,7 +99,7 @@ public class UserController {
         userService.register(user);
 
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("errMsg", "i don't know");
+        paramMap.put("errMsg", "no error");
         //设置返回请求头
         response.setContentType("application/json;charset=utf-8");
         return JSONObject.toJSONString(paramMap);

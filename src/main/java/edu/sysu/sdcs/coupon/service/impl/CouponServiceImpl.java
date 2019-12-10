@@ -42,10 +42,6 @@ public class CouponServiceImpl implements CouponService{
         return couponRepo.findCouponByCouponNameEquals(couponName);
     }
 
-    @Override
-    public int getMaxCouponId() {
-        return 0;
-    }
 
 
 }

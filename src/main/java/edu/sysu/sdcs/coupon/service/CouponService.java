@@ -8,5 +8,4 @@ public interface CouponService {
 
     Coupon getCouponByName(String name);
 
-    int getMaxCouponId();
 }
