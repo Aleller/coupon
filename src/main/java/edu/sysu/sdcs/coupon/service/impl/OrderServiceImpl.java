@@ -1,5 +1,6 @@
 package edu.sysu.sdcs.coupon.service.impl;
 
+import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.Order;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.exception.MsgException;
@@ -26,35 +27,35 @@ public class OrderServiceImpl implements OrderService {
 
     public void createOrder(Integer conponId, Integer userId) {
         var user = userRepo.findById(userId);
-        var conpon = couponRepo.findById(conponId);
+        var coupon = couponRepo.findById(conponId);
 
-        if (user.isPresent()) {
+        if (!user.isPresent()) {
             throw new MsgException("用户不存在");
         }
 
-        if (conpon.isPresent()) {
+        if (!coupon.isPresent()) {
             throw new MsgException("优惠券不存在");
         }
 
-        var order = orderRepo.findByUserEqualsAndCouponEquals(userId, conponId);
+        var order = orderRepo.findByUserEqualsAndCouponEquals(user.get(), coupon.get());
         if (null != order) {
             throw new MsgException("用户已经拥有这张优惠券");
         }
 
         order = new Order();
         order.setUser(user.get());
-        order.setCoupon(conpon.get());
+        order.setCoupon(coupon.get());
         orderRepo.save(order);
 
         log.info("==>[order] 用户: {} 获得优惠券 {}",
                 user.get().getUsername(),
-                conpon.get().getCouponName());
+                coupon.get().getCouponName());
 
     }
 
     @Override
-    public Order findByUserEqualsAndCouponEquals(Integer userId, Integer couponId) {
-        return orderRepo.findByUserEqualsAndCouponEquals(userId,couponId);
+    public Order findByUserEqualsAndCouponEquals(User user, Coupon coupon) {
+        return orderRepo.findByUserEqualsAndCouponEquals(user,coupon);
     }
 
 

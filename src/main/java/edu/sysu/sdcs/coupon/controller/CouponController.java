@@ -8,16 +8,13 @@ import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.SeckillService;
 import edu.sysu.sdcs.coupon.service.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.awt.print.Pageable;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/coupons")
 public class CouponController {
+
     @Autowired
     private CouponService couponService;
 
@@ -35,32 +33,45 @@ public class CouponController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation("新增优惠券")
-    @ApiImplicitParam(name = "coupon", value = "优惠券实体", required = true, dataType = "Coupon")
-    @PostMapping()
-    public boolean addCoupon(@Valid @RequestBody Coupon coupon) {
-//        couponService.addCoupon(coupon);
-        return true;
+    static int addCouponRequestCount;
+
+    @Autowired
+    CouponController(CouponService couponService){
+
+        this.couponService = couponService;
+        addCouponRequestCount = couponService.getMaxCouponId();
     }
 
-    @PatchMapping("/{couponName}")
-    public boolean seckillCoupon(@PathVariable(value = "couponName") Integer couponId) {
-//        seckillService.seckillCoupon(123, couponId);
-        return true;
-    }
+
+//    @ApiOperation("新增优惠券")
+//    @ApiImplicitParam(name = "coupon", value = "优惠券实体", required = true, dataType = "Coupon")
+//    @PostMapping()
+//    public boolean addCoupon(@Valid @RequestBody Coupon coupon) {
+////        couponService.addCoupon(coupon);
+//        return true;
+//    }
+//
+//    @PatchMapping("/{couponName}")
+//    public boolean seckillCoupon(@PathVariable(value = "couponName") Integer couponId) {
+////        seckillService.seckillCoupon(123, couponId);
+//        return true;
+//    }
 
     @ApiOperation("新增优惠券")
-    @ApiImplicitParam(name = "coupon", value = "优惠券实体", required = true, dataType = "Coupon")
-    @PostMapping("/coupons/add")
+    @PostMapping("/add")
     public String addCoupon(String username, String name, String amount, String description, String stock, HttpServletResponse response) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         Coupon coupon = new Coupon();
         coupon.setSeller(user);
         coupon.setCouponName(name);
-        coupon.setAmount(Integer.getInteger(amount));
+        coupon.setAmount(Integer.parseInt(amount));
         coupon.setDescription(description);
-        coupon.setStock(Integer.getInteger(stock));
-        coupon.setInitAmount(Integer.getInteger(amount));
+        coupon.setStock(Integer.parseInt(stock));
+        coupon.setInitAmount(Integer.parseInt(amount));
+        coupon.setCreateTime(Calendar.getInstance().getTime());
+        coupon.setUpdateTime(Calendar.getInstance().getTime());
+        ++addCouponRequestCount;
+        //coupon.setId(addCouponRequestCount);
 
         couponService.addCoupon(coupon, user);
 
@@ -72,7 +83,7 @@ public class CouponController {
     }
 
     @ApiOperation("秒杀")
-    @PatchMapping("/coupons/seckill")
+    @PatchMapping("/seckill")
     public String seckill(String username, String name, HttpServletResponse response) {
         User customer = (User) SecurityUtils.getSubject().getPrincipal();
         seckillService.seckillCoupon(name, username, customer);
@@ -85,10 +96,10 @@ public class CouponController {
     }
 
     @ApiOperation("顾客查商家的优惠券")
-    @GetMapping("/user/customer/searchForCoupons")
-    public String getSellerCoupon(String sellerName, int page, HttpServletResponse response){
+    @GetMapping("/customerSearchForCoupons")
+    public String getSellerCoupon(String sellerName, Integer page, HttpServletResponse response){
         User seller = userService.getUserByName(sellerName);
-        List<Coupon> list = userService.getSellerCouponsPage(seller, page-1);
+        List<Coupon> list = userService.getSellerCouponsPage(seller, page);
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("data", list);
@@ -99,10 +110,10 @@ public class CouponController {
     }
 
     @ApiOperation("顾客查已经抢到的优惠券")
-    @GetMapping("/user/customer/myCoupons")
+    @GetMapping("/customerMyCoupons")
     public String customerCoupons(int page, HttpServletResponse response){
         User customer = (User) SecurityUtils.getSubject().getPrincipal();
-        List<Order> list = userService.getOrdersPage(customer, page-1);
+        List<Order> list = userService.getOrdersPage(customer, page);
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("data", list);
@@ -113,10 +124,10 @@ public class CouponController {
     }
 
     @ApiOperation("商家查看自己的优惠券")
-    @GetMapping("/user/seller/myCoupons")
+    @GetMapping("/sellerMyCoupons")
     public String sellerCoupons(int page, HttpServletResponse response){
         User seller = (User) SecurityUtils.getSubject().getPrincipal();
-        List<Coupon> list = userService.getSellerCouponsPage(seller, page-1);
+        List<Coupon> list = userService.getSellerCouponsPage(seller, page);
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("data", list);

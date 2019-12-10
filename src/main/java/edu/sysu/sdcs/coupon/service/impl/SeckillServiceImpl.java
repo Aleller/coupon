@@ -56,7 +56,7 @@ public class SeckillServiceImpl implements SeckillService{
             throw new MsgException("您已经抢到了这个优惠券");
         }
 
-        Order order = orderService.findByUserEqualsAndCouponEquals(user.getId(), coupon.getId());
+        Order order = orderService.findByUserEqualsAndCouponEquals(user, coupon);
         if(order != null){
             throw new MsgException("您已经抢到了这个优惠券");
         }
@@ -85,7 +85,7 @@ public class SeckillServiceImpl implements SeckillService{
             throw new MsgException("优惠券"+ couponName + "不存在");
         }
 
-        if (coupon.getSeller().getUsername() != sellerName) {
+        if (! sellerName.equals(coupon.getSeller().getUsername())) {
             throw new MsgException("商家" + sellerName + "没有优惠券" + couponName);
         }
 

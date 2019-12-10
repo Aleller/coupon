@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @ApiOperation("登出")
-    @GetMapping("/uesr/logout")
+    @GetMapping("/user/logout")
     public void logout() {
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.logout();

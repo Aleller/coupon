@@ -4,7 +4,6 @@ import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.repository.CouponRepo;
-import edu.sysu.sdcs.coupon.repository.UserRepo;
 import edu.sysu.sdcs.coupon.service.CouponService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class CouponServiceImpl implements CouponService{
+
     @Autowired
     CouponRepo couponRepo;
 
     @Autowired
     RedisTemplate redisTemplate;
+
+
 
     public void updateRedis (Coupon coupon) {
         if (coupon.getAmount() < 0) {
@@ -31,13 +33,18 @@ public class CouponServiceImpl implements CouponService{
     public void addCoupon(Coupon coupon, User user) {
         coupon.setSeller(user);
 
+        coupon = couponRepo.save(coupon);
         updateRedis(coupon);
-        couponRepo.save(coupon);
     }
 
     @Override
     public Coupon getCouponByName (String couponName) {
         return couponRepo.findCouponByCouponNameEquals(couponName);
+    }
+
+    @Override
+    public int getMaxCouponId() {
+        return 0;
     }
 
 
