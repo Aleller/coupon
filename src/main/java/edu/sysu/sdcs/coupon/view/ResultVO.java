@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ResultVO<T> {
     private Integer code;
     private T data;
-    private String msg;
+    private String errMsg;
 }

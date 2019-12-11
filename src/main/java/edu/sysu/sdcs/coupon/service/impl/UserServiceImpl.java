@@ -4,6 +4,7 @@ import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.Order;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.enums.Role;
+import edu.sysu.sdcs.coupon.exception.MsgException;
 import edu.sysu.sdcs.coupon.repository.CouponRepo;
 import edu.sysu.sdcs.coupon.repository.OrderRepo;
 import edu.sysu.sdcs.coupon.repository.UserRepo;
@@ -13,12 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
 import java.util.List;
 
 
@@ -38,22 +35,13 @@ public class UserServiceImpl implements UserService {
         return userRepo.findUserByUsernameEquals(userName);
     }
 
-    public String read() {
-        return "reading...";
-    }
-
-    public String write() {
-        return "writing...";
-    }
-
     @Override
     public void register(User user) {
+        var userRes = getUserByName(user.getUsername());
+        if (null == userRes) {
+            throw new MsgException("用户名已存在");
+        }
         userRepo.save(user);
-    }
-
-    @Override
-    public List<Coupon> getSellerCoupons(User seller) {
-        return couponRepo.findCouponsBySellerEquals(seller);
     }
 
     @Override
@@ -71,10 +59,5 @@ public class UserServiceImpl implements UserService {
         Page<Order> orders = orderRepo.findOrdersByUserEquals(user,pageable);
 
         return orders.toList();
-    }
-
-    @Override
-    public List<Coupon> sellserCouponsLeft(User seller) {
-        return couponRepo.findCouponsBySellerEquals(seller);
     }
 }

@@ -13,14 +13,14 @@ public class ResponseResult {
         ResultVO resultVO = new ResultVO();
         resultVO.setData(object);
         resultVO.setCode(0);
-        resultVO.setMsg(ResultEnum.SUCCESS.getMessage());
+        resultVO.setErrMsg("");
         return resultVO;
     }
 
     public static ResultVO error(Integer code, String msg) {
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(code);
-        resultVO.setMsg(msg);
+        resultVO.setErrMsg(msg);
         return resultVO;
     }
 

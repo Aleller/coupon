@@ -13,8 +13,7 @@ public enum ResultEnum {
      * 不可预测条件
      */
     SUCCESS(0, "成功"),
-    FAILURE(-1,"失败"),
-    ERROR(-2,"the program is gg... "),
+    ERROR(-1,"失败"),
 
 
     /**

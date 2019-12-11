@@ -11,5 +11,4 @@ import java.util.List;
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer>{
     User findUserByUsernameEquals(String s);
-    User findUserByIdEquals(Integer id);
 }

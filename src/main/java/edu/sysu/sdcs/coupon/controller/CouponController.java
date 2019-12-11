@@ -8,7 +8,6 @@ import edu.sysu.sdcs.coupon.enums.Role;
 import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.SeckillService;
 import edu.sysu.sdcs.coupon.service.UserService;
-import edu.sysu.sdcs.coupon.view.ControllerSellerCouponVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -20,7 +19,6 @@ import java.util.*;
 
 @Api(value = "优惠券Controller")
 @RestController
-//@RequestMapping("/coupons")
 @RequestMapping("/api")
 public class CouponController {
 

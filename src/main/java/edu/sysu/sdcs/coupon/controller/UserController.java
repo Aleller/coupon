@@ -11,17 +11,23 @@ import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.service.SeckillService;
 import edu.sysu.sdcs.coupon.service.UserService;
+import edu.sysu.sdcs.coupon.utils.ResponseResult;
+import edu.sysu.sdcs.coupon.view.RegisterVO;
+import edu.sysu.sdcs.coupon.view.ResultVO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.net.BindException;
 import java.util.*;
 
 @RestController
@@ -29,15 +35,6 @@ import java.util.*;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CouponService couponService;
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private SeckillService seckillService;
 
     @ApiOperation("登录")
     @PostMapping("/auth")
@@ -71,40 +68,33 @@ public class UserController {
         currentUser.logout();
     }
 
-    @GetMapping("/read")
-    public String read() {
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        return user.getUsername() + " is " + userService.read();
-    }
 
     @ApiOperation("注册")
     @PostMapping("/users")
-    public String register(@RequestBody Map<String, String> parameters, HttpServletResponse response) {
-        User user = new User();
-        user.setUsername(parameters.get("username"));
-        user.setPassword(parameters.get("password"));
+    public ResultVO register(@RequestBody @Valid RegisterVO registerVO, BindingResult results) {
+        if (results.hasErrors()) {
+            var msg = results.getFieldError().getDefaultMessage();
+            return ResponseResult.error(msg);
+        }
 
-        String kind = parameters.get("kind");
+
+        var user = new User();
+        user.setUsername(registerVO.getUserName());
+        user.setPassword(registerVO.getPassWord());
+        var kind = registerVO.getKind();
+
         if (null == kind) {
             kind = "customer";
         }
 
-        if(kind.equals("customer")){
-            user.setRole(Role.CUSTOMER);
-        }else if (kind.equals("saler")){
-            user.setRole(Role.SELLER);
-        } else {
+        var role = Role.getTypeByName(kind);
+        if (null == role) {
             throw new MsgException("kind参数非法");
         }
+        user.setRole(role);
 
         userService.register(user);
 
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("errMsg", "no error");
-        //设置返回请求头
-        response.setContentType("application/json;charset=utf-8");
-        return JSONObject.toJSONString(paramMap);
+        return ResponseResult.success();
     }
-
-
 }

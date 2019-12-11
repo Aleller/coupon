@@ -9,21 +9,13 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import java.util.List;
 
 public interface UserService {
-    User getUserByName (String name);
-
     @RequiresRoles(value={"CUSTOMER","SELLER"},logical= Logical.OR)
-    String read();
-
-    @RequiresRoles("SELLER")
-    String write();
+    User getUserByName (String name);
 
     void register(User user);
 
-    List<Coupon> getSellerCoupons(User seller);
-
     List<Coupon> getSellerCouponsPage(User user, int page);
 
+    @RequiresRoles("SELLER")
     List<Order> getOrdersPage(User user, int page);
-
-    List<Coupon> sellserCouponsLeft(User seller);
 }
