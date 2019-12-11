@@ -30,7 +30,8 @@ spring:
           auto: update
 
   rabbitmq:
-    host: 192.168.137.199
+    host: 192.168.137.199 #ls的电脑热点
+    #host: 192.168.43.221 #ls的手机热点
     port: 5672
     username: admin
     password: 123456
