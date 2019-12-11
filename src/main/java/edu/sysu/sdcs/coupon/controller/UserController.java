@@ -27,9 +27,11 @@ public class UserController {
     @ApiOperation("登录")
     @PostMapping("/auth")
     public ResultVO login(@RequestBody User user, HttpServletResponse response, BindingResult results) {
+
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
-        Subject currentUser = SecurityUtils.getSubject();
-        currentUser.login(token);
+
+        Subject currentUserSubject = SecurityUtils.getSubject();
+        currentUserSubject.login(token);
 
         //设置返回请求头
         String sessionId = (String) SecurityUtils.getSubject().getSession().getId();
@@ -55,8 +57,8 @@ public class UserController {
         }
 
         var user = new User();
-        user.setUsername(registerVO.getUserName());
-        user.setPassword(registerVO.getPassWord());
+        user.setUsername(registerVO.getUsername());
+        user.setPassword(registerVO.getPassword());
 
         var kind = registerVO.getKind();
         var role = Role.getTypeByName(kind);

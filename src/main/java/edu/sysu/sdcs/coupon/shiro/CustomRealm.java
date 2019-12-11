@@ -22,7 +22,7 @@ public class CustomRealm extends AuthorizingRealm {
     /**
      * 认证
      * SecurityUtils.getSubject().getPrincipal();
-     * 就是你的realms内doGetAuthenticationInfo时new SimpleAuthenticationInfo的第一个构造参数，直接放user对象就行了
+     * 返回的就是你的realms内doGetAuthenticationInfo时new SimpleAuthenticationInfo的第一个构造参数，直接放user对象就行了
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {

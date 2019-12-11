@@ -4,7 +4,6 @@ spring:
     throw-exception-if-no-handler-found: true
 
   redis:
-    database: 0
     host: localhost
     port: 6379
     password:
@@ -30,7 +29,7 @@ spring:
           auto: update
 
   rabbitmq:
-    host: localhost
+    host: 192.168.137.199
     port: 5672
     username: admin
     password: 123456

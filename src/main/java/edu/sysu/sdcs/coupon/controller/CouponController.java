@@ -52,7 +52,7 @@ public class CouponController {
 
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         var coupon = new Coupon();
-        coupon.setCouponName(couponVO.getCouponName());
+        coupon.setCouponName(couponVO.getName());
         coupon.setAmount(couponVO.getAmount());
         coupon.setStock(couponVO.getStock());
         coupon.setDescription(couponVO.getDescription());
