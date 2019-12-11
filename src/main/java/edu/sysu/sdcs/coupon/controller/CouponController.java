@@ -92,11 +92,12 @@ public class CouponController {
     @ApiOperation("顾客或商家获取优惠券信息")
     @GetMapping("/users/{username}/coupons")
     public String customerOrSellerGetCouponInfo(@PathVariable String username,
-                                                @RequestBody Map<String, String> parameters,
+                                                Integer page,
                                                 HttpServletResponse response) {
-        int page = Integer.parseInt(parameters.get("page"));
-
         User user = (User) SecurityUtils.getSubject().getPrincipal();
+
+        //todo，上线的时候要删除下面这句话，因为亦蒙的脚本没有page
+        page = 1;
 
         if (username.equals(user.getUsername())) {
             User customer = user;
