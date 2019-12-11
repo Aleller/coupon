@@ -4,6 +4,7 @@ import edu.sysu.sdcs.coupon.utils.ResponseResult;
 import edu.sysu.sdcs.coupon.view.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,6 +68,14 @@ public class WebException {//extends OpStackException {
             return ResponseResult.error(401,"未授权客户机访问数据");
         }
         return ResponseResult.error(e.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    @ResponseBody
+    public ResultVO getUnauthenticatedException(AuthorizationException e) {
+        log.error("==> [UnauthenticatedException]: getMessage ==> {}, {} ","AuthorizationException",e);
+
+        return ResponseResult.error("无权访问");
     }
 
     /**

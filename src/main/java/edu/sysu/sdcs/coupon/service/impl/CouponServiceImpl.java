@@ -48,12 +48,16 @@ public class CouponServiceImpl implements CouponService{
     @Transactional
     public void decCouponAmount(Integer couponId) {
         Coupon coupon = couponRepo.findById(couponId).get();
-        coupon.setAmount(coupon.getLeft() - 1);
+        coupon.setLeft(coupon.getLeft() - 1);
         couponRepo.save(coupon);
     }
 
     @Override
-    public List<Coupon> getSellerCouponsPage(User user, int page) {
+    public List<Coupon> getSellerCouponsPage(User user, Integer page) {
+        if (page < 1) {
+            throw new MsgException("page参数不合法");
+        }
+
         Pageable pageable = PageRequest.of(page-1,20);
 
         Page<Coupon> coupons = couponRepo.findCouponsBySellerEquals(user, pageable);
