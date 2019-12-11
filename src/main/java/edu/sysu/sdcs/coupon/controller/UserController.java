@@ -41,8 +41,8 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping("/auth")
-    public String login(String username, String password, HttpServletResponse response) throws IOException {
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+    public String login(@RequestBody Map<String,String> parameters, HttpServletResponse response) throws IOException {
+        UsernamePasswordToken token = new UsernamePasswordToken(parameters.get("username"), parameters.get("password"));
         //token.setRememberMe(true);
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.login(token);
@@ -72,18 +72,19 @@ public class UserController {
     }
 
     @GetMapping("/read")
-    public String read(HttpServletRequest request) {
+    public String read() {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         return user.getUsername() + " is " + userService.read();
     }
 
     @ApiOperation("注册")
     @PostMapping("/users")
-    public String register(String username, String password, String kind, HttpServletResponse response) {
+    public String register(@RequestBody Map<String, String> parameters, HttpServletResponse response) {
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
+        user.setUsername(parameters.get("username"));
+        user.setPassword(parameters.get("password"));
 
+        String kind = parameters.get("kind");
         if (null == kind) {
             kind = "customer";
         }

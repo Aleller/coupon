@@ -51,15 +51,17 @@ public class CouponController {
 
     @ApiOperation("新增优惠券")
     @PostMapping("/users/{username}/coupons")
-    public String addCoupon(@PathVariable String username, String name, String amount, String description, String stock, HttpServletResponse response) {
+    public String addCoupon(@PathVariable String username,
+                            @RequestBody Map<String, String> parameters,
+                            HttpServletResponse response) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         Coupon coupon = new Coupon();
         coupon.setSeller(user);
-        coupon.setCouponName(name);
-        coupon.setAmount(Integer.parseInt(amount));
-        coupon.setDescription(description);
-        coupon.setStock(Integer.parseInt(stock));
-        coupon.setInitAmount(Integer.parseInt(amount));
+        coupon.setCouponName(parameters.get("name"));
+        coupon.setAmount(Integer.parseInt(parameters.get("amount")));
+        coupon.setDescription(parameters.get("description"));
+        coupon.setStock(Integer.parseInt(parameters.get("stock")));
+        coupon.setInitAmount(Integer.parseInt(parameters.get("amount")));
         coupon.setCreateTime(Calendar.getInstance().getTime());
         coupon.setUpdateTime(Calendar.getInstance().getTime());
 
@@ -75,7 +77,9 @@ public class CouponController {
 
     @ApiOperation("秒杀")
     @PatchMapping("/users/{username}/coupons/{name}")
-    public String seckill(@PathVariable String username, @PathVariable String name, HttpServletResponse response) {
+    public String seckill(@PathVariable String username,
+                          @PathVariable String name,
+                          HttpServletResponse response) {
         User customer = (User) SecurityUtils.getSubject().getPrincipal();
         seckillService.seckillCoupon(name, username, customer);
 
@@ -89,7 +93,11 @@ public class CouponController {
 
     @ApiOperation("顾客或商家获取优惠券信息")
     @GetMapping("/users/{username}/coupons")
-    public String customerOrSellerGetCouponInfo(@PathVariable String username, int page, HttpServletResponse response) {
+    public String customerOrSellerGetCouponInfo(@PathVariable String username,
+                                                @RequestBody Map<String, String> parameters,
+                                                HttpServletResponse response) {
+        int page = Integer.parseInt(parameters.get("page"));
+
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         if (username.equals(user.getUsername())) {
