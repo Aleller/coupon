@@ -15,8 +15,6 @@ import java.util.List;
 public interface CouponRepo extends JpaRepository<Coupon, Integer> {
     Coupon findCouponByCouponNameEquals(String s);
 
-    List<Coupon> findCouponsBySellerEquals(User seller);
-
     Page<Coupon> findCouponsBySellerEquals(User seller, Pageable pageable);
 
 }

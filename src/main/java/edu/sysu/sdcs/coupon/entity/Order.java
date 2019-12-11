@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 @Table(name = "order_table")
 public class Order {
     @Id

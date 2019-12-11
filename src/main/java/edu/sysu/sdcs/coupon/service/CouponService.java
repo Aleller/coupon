@@ -4,11 +4,16 @@ import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.User;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface CouponService {
-    void addCoupon(Coupon coupon, User user);
+    @Transactional
+    void addCoupon(Coupon coupon);
 
     Coupon getCouponByName(String name);
 
+    @Transactional
     void decCouponAmount(Integer couponId);
+
+    List<Coupon> getSellerCouponsPage(User user, int page);
 }

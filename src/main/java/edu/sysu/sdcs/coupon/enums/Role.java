@@ -16,7 +16,7 @@ public enum Role {
 
     public static Role getTypeByName(String name){
         for (var enums : Role.values()) {
-            if (enums.getName() == name) {
+            if (enums.getName().equals(name)) {
                 return enums;
             }
         }

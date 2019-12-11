@@ -12,7 +12,12 @@ import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.view.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -64,5 +69,11 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findByUserEqualsAndCouponEquals(user,coupon);
     }
 
+    @Override
+    public List<Order> getOrdersPage(User user, int page) {
+        Pageable pageable = PageRequest.of(page-1,20);
+        Page<Order> orders = orderRepo.findOrdersByUserEquals(user,pageable);
 
+        return orders.toList();
+    }
 }

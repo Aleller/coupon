@@ -6,16 +6,12 @@ import org.apache.shiro.authz.annotation.Logical;
 import edu.sysu.sdcs.coupon.entity.User;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 public interface UserService {
     @RequiresRoles(value={"CUSTOMER","SELLER"},logical= Logical.OR)
     User getUserByName (String name);
 
+    @Transactional
     void register(User user);
-
-    List<Coupon> getSellerCouponsPage(User user, int page);
-
-    @RequiresRoles("SELLER")
-    List<Order> getOrdersPage(User user, int page);
 }

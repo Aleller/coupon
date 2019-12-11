@@ -38,26 +38,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void register(User user) {
         var userRes = getUserByName(user.getUsername());
-        if (null == userRes) {
+        if (null != userRes) {
             throw new MsgException("用户名已存在");
         }
         userRepo.save(user);
-    }
-
-    @Override
-    public List<Coupon> getSellerCouponsPage(User user, int page) {
-        Pageable pageable = PageRequest.of(page-1,20);
-
-        Page<Coupon> coupons = couponRepo.findCouponsBySellerEquals(user, pageable);
-
-        return coupons.toList();
-    }
-
-    @Override
-    public List<Order> getOrdersPage(User user, int page) {
-        Pageable pageable = PageRequest.of(page-1,20);
-        Page<Order> orders = orderRepo.findOrdersByUserEquals(user,pageable);
-
-        return orders.toList();
     }
 }

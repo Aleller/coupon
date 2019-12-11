@@ -5,6 +5,8 @@ import edu.sysu.sdcs.coupon.view.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.UnauthenticatedException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,5 +91,17 @@ public class WebException {//extends OpStackException {
     public ResultVO getMsgException(MsgException e) {
         log.error(e.getMsg());
         return ResponseResult.error(e.getMsg());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResultVO getMsgException(MethodArgumentNotValidException e) {
+        BindingResult result = e.getBindingResult();
+        if (result.hasErrors()) {
+            String msg =  result.getAllErrors().get(0).getDefaultMessage();
+            log.error(msg);
+            return ResponseResult.error(msg);
+        }
+        return ResponseResult.error("信息不正确");
     }
 }
