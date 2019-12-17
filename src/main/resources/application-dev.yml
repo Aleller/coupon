@@ -1,3 +1,7 @@
+server:
+  #端口号
+  port: 20080
+
 spring:
   mvc:
     #出现错误时, 直接抛出异常
@@ -29,7 +33,7 @@ spring:
           auto: update
 
   rabbitmq:
-    host: 192.168.137.199
+    host: localhost
     port: 5672
     username: admin
     password: 123456

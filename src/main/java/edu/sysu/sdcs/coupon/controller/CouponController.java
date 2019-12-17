@@ -50,6 +50,7 @@ public class CouponController {
             return ResponseResult.error(msg);
         }
 
+
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         var coupon = new Coupon();
         coupon.setCouponName(couponVO.getName());

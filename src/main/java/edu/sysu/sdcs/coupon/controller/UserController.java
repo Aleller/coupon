@@ -50,7 +50,7 @@ public class UserController {
 
     @ApiOperation("注册")
     @PostMapping("/users")
-    public ResultVO register(@RequestBody @Valid RegisterVO registerVO, BindingResult results) {
+    public ResultVO register(@RequestBody @Valid RegisterVO registerVO, HttpServletResponse response, BindingResult results) {
         if (results.hasErrors()) {
             var msg = results.getFieldError().getDefaultMessage();
             return ResponseResult.error(msg);
@@ -69,6 +69,7 @@ public class UserController {
 
         userService.register(user);
 
+        response.setStatus(201);
         return ResponseResult.success();
     }
 }
