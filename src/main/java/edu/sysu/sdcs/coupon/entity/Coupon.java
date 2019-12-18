@@ -29,7 +29,7 @@ public class Coupon {
     private Integer stock;
 
     @JoinColumn(name="seller_id")
-    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.LAZY)
     private User seller;
 
     @Column(name = "create_time")
