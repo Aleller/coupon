@@ -1,6 +1,7 @@
 server:
   #端口号
   port: 20080
+  #port: 8080
 
 spring:
   mvc:
@@ -26,7 +27,7 @@ spring:
 
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         hbm2ddl:

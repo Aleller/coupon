@@ -68,10 +68,17 @@ public class CouponController {
     @ApiOperation("秒杀")
     @PatchMapping("/users/{username}/coupons/{name}")
     public ResultVO seckill(@PathVariable String username,
-                          @PathVariable String name) {
+                            @PathVariable String name,
+                            HttpServletResponse response) {
         User customer = (User) SecurityUtils.getSubject().getPrincipal();
+//        if(null == customer){
+//            System.out.println("debug");
+//            System.out.println("debug");
+//            System.out.println("debug");
+//        }
         seckillService.seckillCoupon(name, username, customer);
 
+        response.setStatus(201);
         return ResponseResult.success();
     }
 
@@ -82,6 +89,10 @@ public class CouponController {
                                                   HttpServletResponse response) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         User urlUser = userService.getUserByName(username);
+
+        if(null == page){
+            page = 1;
+        }
 
         if (null == urlUser) {
             response.setStatus(401);
