@@ -5,6 +5,7 @@ import edu.sysu.sdcs.coupon.entity.Coupon;
 import edu.sysu.sdcs.coupon.entity.Order;
 import edu.sysu.sdcs.coupon.entity.User;
 import edu.sysu.sdcs.coupon.exception.MsgException;
+import edu.sysu.sdcs.coupon.exception.SeckillFailException;
 import edu.sysu.sdcs.coupon.ordermq.MQSender;
 import edu.sysu.sdcs.coupon.service.CouponService;
 import edu.sysu.sdcs.coupon.service.OrderService;
@@ -53,12 +54,12 @@ public class SeckillServiceImpl implements SeckillService{
         var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
 
         if (!absRes) {
-            throw new MsgException("您已经抢到了这个优惠券");
+            throw new SeckillFailException("您已经抢到了这个优惠券");
         }
 
         Order order = orderService.findByUserEqualsAndCouponEquals(user, coupon);
         if(order != null){
-            throw new MsgException("您已经抢到了这个优惠券");
+            throw new SeckillFailException("您已经抢到了这个优惠券");
         }
 
         Boolean curRes = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
@@ -66,7 +67,7 @@ public class SeckillServiceImpl implements SeckillService{
         if (!curRes) {
             // 先去锁
             redisTemplate.delete(msg);
-            throw new MsgException("优惠券" + coupon.getCouponName() + "卖完了");
+            throw new SeckillFailException("优惠券" + coupon.getCouponName() + "卖完了");
         }
 
         mqSender.send(msg);
@@ -78,15 +79,15 @@ public class SeckillServiceImpl implements SeckillService{
         var coupon = couponService.getCouponByName(couponName);
 
         if (null == seller) {
-            throw new MsgException("商家"+ sellerName + "不存在");
+            throw new SeckillFailException("商家"+ sellerName + "不存在");
         }
 
         if (null == coupon) {
-            throw new MsgException("优惠券"+ couponName + "不存在");
+            throw new SeckillFailException("优惠券"+ couponName + "不存在");
         }
 
         if (! sellerName.equals(coupon.getSeller().getUsername())) {
-            throw new MsgException("商家" + sellerName + "没有优惠券" + couponName);
+            throw new SeckillFailException("商家" + sellerName + "没有优惠券" + couponName);
         }
 
         enqueue(user, coupon);
