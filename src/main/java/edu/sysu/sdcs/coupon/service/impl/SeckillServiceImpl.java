@@ -54,12 +54,12 @@ public class SeckillServiceImpl implements SeckillService{
         var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
 
         if (!absRes) {
-            throw new SeckillFailException("您已经抢到了这个优惠券");
+            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
         }
 
         Order order = orderService.findByUserEqualsAndCouponEquals(user, coupon);
         if(order != null){
-            throw new SeckillFailException("您已经抢到了这个优惠券");
+            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
         }
 
         Boolean curRes = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));
@@ -75,9 +75,7 @@ public class SeckillServiceImpl implements SeckillService{
 
     @Override
     public void seckillCoupon(String couponName, String sellerName, User user) {
-        if(null == couponName){
-            System.out.println("");
-        }
+
 
         var seller = userService.getUserByName(sellerName);
         var coupon = couponService.getCouponByName(couponName);
