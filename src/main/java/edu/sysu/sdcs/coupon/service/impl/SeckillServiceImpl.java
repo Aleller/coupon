@@ -75,6 +75,10 @@ public class SeckillServiceImpl implements SeckillService{
 
     @Override
     public void seckillCoupon(String couponName, String sellerName, User user) {
+        if(null == couponName){
+            System.out.println("");
+        }
+
         var seller = userService.getUserByName(sellerName);
         var coupon = couponService.getCouponByName(couponName);
 
