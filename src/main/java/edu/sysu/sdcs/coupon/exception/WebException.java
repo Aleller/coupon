@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author anan
  * @date: Created in 2019/9/2 9:38
@@ -39,8 +41,10 @@ public class WebException {//extends OpStackException {
      */
     @ExceptionHandler(AuthenticationException.class)
     @ResponseBody
-    public ResultVO getAuthenticationException(AuthenticationException e) {
+    public ResultVO getAuthenticationException(AuthenticationException e, HttpServletResponse response) {
         log.error("==> [AuthenticationException]: getMessage ==> {}, {} ","AuthenticationException",e);
+
+        response.setStatus(401);
 
         String message = e.getMessage();
         if(message.contains("Authentication failed for token submission") && message.contains("Possible unexpected error?")) {
@@ -59,23 +63,29 @@ public class WebException {//extends OpStackException {
      */
     @ExceptionHandler(UnauthenticatedException.class)
     @ResponseBody
-    public ResultVO getUnauthenticatedException(UnauthenticatedException e) {
+    public ResultVO getUnauthenticatedException(UnauthenticatedException e,
+                                                HttpServletResponse response) {
         log.error("==> [UnauthenticatedException]: getMessage ==> {}, {} ","UnauthenticatedException",e);
+
+        response.setStatus(401);
 
         String message = e.getMessage();
         if(message.contains("authorization is denied")) {
             log.error("==> [UnauthenticatedException]: 未授权客户机访问数据 ");
-            return ResponseResult.error(401,"未授权客户机访问数据");
+            return ResponseResult.error("未授权客户机访问数据");
         }
         return ResponseResult.error(e.getMessage());
     }
 
     @ExceptionHandler(AuthorizationException.class)
     @ResponseBody
-    public ResultVO getUnauthenticatedException(AuthorizationException e) {
+    public ResultVO getUnauthenticatedException(AuthorizationException e,
+                                                HttpServletResponse response) {
         log.error("==> [UnauthenticatedException]: getMessage ==> {}, {} ","AuthorizationException",e);
 
-        return ResponseResult.error("无权访问");
+        response.setStatus(401);
+
+        return ResponseResult.error(401,"无权访问");
     }
 
     /**
@@ -97,8 +107,18 @@ public class WebException {//extends OpStackException {
      */
     @ExceptionHandler(MsgException.class)
     @ResponseBody
-    public ResultVO getMsgException(MsgException e) {
+    public ResultVO getMsgException(MsgException e, HttpServletResponse response) {
         log.error(e.getMsg());
+        response.setStatus(400);
+        return ResponseResult.error(e.getMsg());
+    }
+
+    @ExceptionHandler(SeckillFailException.class)
+    @ResponseBody
+    public ResultVO getSeckillFailException(SeckillFailException e,
+                                            HttpServletResponse response){
+        log.error(e.getMsg());
+        response.setStatus(204);
         return ResponseResult.error(e.getMsg());
     }
 

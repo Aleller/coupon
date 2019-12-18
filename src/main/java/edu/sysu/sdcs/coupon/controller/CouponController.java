@@ -78,16 +78,19 @@ public class CouponController {
     @ApiOperation("顾客或商家获取优惠券信息")
     @GetMapping("/users/{username}/coupons")
     public ResultVO customerOrSellerGetCouponInfo(@PathVariable String username,
-                                                Integer page) {
+                                                  Integer page,
+                                                  HttpServletResponse response) {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         User urlUser = userService.getUserByName(username);
 
         if (null == urlUser) {
+            response.setStatus(401);
             return ResponseResult.error("用户不存在");
         }
 
         if (urlUser.getRole() == Role.CUSTOMER) {
             if (user.getId() != urlUser.getId()) {
+                response.setStatus(401);
                 return ResponseResult.error("无权访问");
             }
 
@@ -99,6 +102,9 @@ public class CouponController {
                         order.getCoupon().getDescription()));
             }
 
+            if(list.size() == 0){
+                response.setStatus(204);
+            }
             return ResponseResult.success(resList);
         }
 
@@ -106,6 +112,9 @@ public class CouponController {
             var couponList = couponService.getSellerCouponsPage(urlUser, page);
 
             if (user.getId() == urlUser.getId()) {
+                if(couponList.isEmpty()){
+                    response.setStatus(204);
+                }
                 return ResponseResult.success(couponList);
             }
 
@@ -115,9 +124,13 @@ public class CouponController {
                         coupon.getStock(), coupon.getDescription()));
             }
 
+            if(couponList.isEmpty()){
+                response.setStatus(204);
+            }
             return ResponseResult.success(resList);
         }
 
+        response.setStatus(401);
         return ResponseResult.error("未知角色");
     }
 }
