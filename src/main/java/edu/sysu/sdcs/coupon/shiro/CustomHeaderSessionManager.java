@@ -76,7 +76,7 @@ public class CustomHeaderSessionManager extends DefaultSessionManager implements
 
             if (!StringUtils.isEmpty(sessionId)) {
                 httpResponse.setHeader(this.X_AUTH_TOKEN, sessionId);
-                log.info("Current session ID is {}", sessionId);
+
             }
 
             return sessionId;

@@ -1,7 +1,7 @@
 server:
   #端口号
   port: 20080
-  #port: 8080
+
 
 spring:
   mvc:
@@ -34,8 +34,8 @@ spring:
           auto: update
 
   rabbitmq:
-    host: localhost
-    #host: 192.168.137.199
+    #host: localhost
+    host: 192.168.137.199
     port: 5672
     username: admin
     password: 123456
