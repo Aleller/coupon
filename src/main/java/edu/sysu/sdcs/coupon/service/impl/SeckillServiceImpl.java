@@ -54,11 +54,13 @@ public class SeckillServiceImpl implements SeckillService{
         var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
 
         if (!absRes) {
+            redisTemplate.delete(msg);
             throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
         }
 
         Order order = orderService.findByUserEqualsAndCouponEquals(user, coupon);
         if(order != null){
+            redisTemplate.delete(msg);
             throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
         }
 

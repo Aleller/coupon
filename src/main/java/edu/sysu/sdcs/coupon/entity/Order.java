@@ -20,12 +20,12 @@ public class Order {
 
     @JoinColumn(name="user_id")
     @NotNull(message = "userId not null")
-    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.EAGER)
     private User user;
 
     @JoinColumn(name="coupon_id")
     @NotNull(message = "couponId not null")
-    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, optional = true, fetch = FetchType.EAGER)
     private Coupon coupon;
 
     @Column(name = "create_time")
