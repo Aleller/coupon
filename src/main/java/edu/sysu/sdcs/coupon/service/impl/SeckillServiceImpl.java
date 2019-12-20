@@ -52,14 +52,13 @@ public class SeckillServiceImpl implements SeckillService{
 
         var msg = JSONObject.toJSONString(orderVO);
         var absRes = redisTemplate.opsForValue().setIfAbsent(msg, 1);
-
         if (!absRes) {
-            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
+            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券 line57");
         }
 
         Order order = orderService.findByUserEqualsAndCouponEquals(user, coupon);
         if(order != null){
-            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券");
+            throw new SeckillFailException("用户Id：" + user.getId() +  "已经抢到了这个优惠券 line62");
         }
 
         Boolean curRes = stringRedisTemplate.execute(defaultRedisScript,  Arrays.asList(coupon.getId().toString()));

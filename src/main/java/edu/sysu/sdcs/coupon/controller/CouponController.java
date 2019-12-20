@@ -71,11 +71,7 @@ public class CouponController {
                             @PathVariable String name,
                             HttpServletResponse response) {
         User customer = (User) SecurityUtils.getSubject().getPrincipal();
-//        if(null == customer){
-//            System.out.println("debug");
-//            System.out.println("debug");
-//            System.out.println("debug");
-//        }
+
         seckillService.seckillCoupon(name, username, customer);
 
         response.setStatus(201);
