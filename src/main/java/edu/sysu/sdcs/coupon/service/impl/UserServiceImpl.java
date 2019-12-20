@@ -8,11 +8,14 @@ import edu.sysu.sdcs.coupon.repository.UserRepo;
 import edu.sysu.sdcs.coupon.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "userService")
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepo userRepo;
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "register",keyGenerator="keyGenerator")
     public void register(User user) {
         var userRes = getUserByName(user.getUsername());
         if (null != userRes) {
