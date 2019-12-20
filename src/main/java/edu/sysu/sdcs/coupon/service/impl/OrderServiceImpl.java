@@ -12,6 +12,8 @@ import edu.sysu.sdcs.coupon.service.OrderService;
 import edu.sysu.sdcs.coupon.view.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "orderService")
 public class OrderServiceImpl implements OrderService {
     @Autowired
     UserRepo userRepo;
@@ -65,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Cacheable(value = "findByUserEqualsAndCouponEquals",keyGenerator="keyGenerator")
     public Order findByUserEqualsAndCouponEquals(User user, Coupon coupon) {
         return orderRepo.findByUserEqualsAndCouponEquals(user,coupon);
     }

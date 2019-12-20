@@ -26,12 +26,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     OrderRepo orderRepo;
 
+    @Override
+    @Cacheable(value = "getUserByName",keyGenerator="keyGenerator")
     public User getUserByName (String userName) {
         return userRepo.findUserByUsernameEquals(userName);
     }
 
     @Override
-    @Cacheable(value = "register",keyGenerator="keyGenerator")
     public void register(User user) {
         var userRes = getUserByName(user.getUsername());
         if (null != userRes) {
