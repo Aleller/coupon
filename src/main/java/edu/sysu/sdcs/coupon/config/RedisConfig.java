@@ -1,16 +1,22 @@
 package edu.sysu.sdcs.coupon.config;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.time.Duration;
 
 @Configuration
 @EnableCaching
@@ -60,5 +66,14 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public FastJsonRedisSerializer<?> fastJsonRedisSerializer() {
         return new FastJsonRedisSerializer<>(Object.class);
+    }
+
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory){
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
+                .defaultCacheConfig().entryTtl(Duration.ofHours(1));
+
+        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .cacheDefaults(redisCacheConfiguration).build();
     }
 }

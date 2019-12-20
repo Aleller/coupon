@@ -1,6 +1,6 @@
 server:
   #端口号
-  port: 20080
+  port: 8080
 
 
 spring:
